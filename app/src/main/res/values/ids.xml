@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="avatar" type="id" />
+    <item name="author1" type="id" />
+    <item name="published" type="id" />
+    <item name="menu" type="id" />
+</resources>
