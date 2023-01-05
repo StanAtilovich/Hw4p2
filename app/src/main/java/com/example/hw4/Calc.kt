@@ -50,4 +50,13 @@ object Calc {
         liked = shares.toDouble() / 1000
         return dfor2.format(liked)
     }
-}
+    fun intToViewText(countView: Int): String {
+        return when (countView) {
+            in 0..999 -> countView.toString()
+            in 1000..1099 -> "1K"
+            in 1100..9999 -> return calcShare(countView, 1) + "K"
+            in 10000..999999 -> return calcShare(countView, 0) + "K"
+            in 1000000..999999999 -> return calcShare(countView, 1) + "M"
+            else -> return "Более 1 Billion"
+        }
+}}

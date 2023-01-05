@@ -8,7 +8,8 @@ data class Post(
     var likedByMe:Boolean= false,
     var likCount: Int,
     var shareByMe:Boolean= false,
-    var shareCount: Int
+    var shareCount: Int,
+    var countView: Int
 
 )
 

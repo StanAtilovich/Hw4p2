@@ -23,7 +23,8 @@ class MainActivity : AppCompatActivity() {
             published = "21 мая в 18:36",
             likedByMe = false,
             likCount = 5450,
-            shareCount = 1250
+            shareCount = 1250,
+            countView = 4450
         )
         binding.apply {
             author.text = post.author
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity() {
             content.text = post.content
             textLikes.text = Calc.intToText(post.likCount)
             textShares.text = Calc.intToShareText(post.shareCount)
+            textViews.text = Calc.intToViewText(post.countView)
 
             root.setOnClickListener {
                 Log.d("stuff", "stuff")
