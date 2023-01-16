@@ -2,8 +2,7 @@ package com.example.hw4
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.hw4.Post
-import com.example.hw4.PostViewModel
+
 class PostRepositoryInMemoryImpl: PostRepository {
     private var post = Post(
         id = 1,
@@ -19,13 +18,14 @@ class PostRepositoryInMemoryImpl: PostRepository {
     override fun get(): LiveData<Post> = data
 
     override fun like() {
-        post = post.copy(likedByMe = !post.likedByMe)
+        post = post.copy(likedByMe = (!post.likedByMe))
         data.value = post
 
     }
 
     override fun sharing() {
-        post = post.copy(shareCount = post.shareCount + 1)
+        post = post.copy(shareCount = (post.shareCount + 1))
         data.value = post
     }
+
 }
