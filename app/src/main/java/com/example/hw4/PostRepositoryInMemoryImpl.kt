@@ -3,7 +3,7 @@ package com.example.hw4
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
-class PostRepositoryInMemoryImpl: PostRepository {
+class PostRepositoryInMemoryImpl : PostRepository {
     private var post = Post(
         id = 1,
         author = "Нетология. Университет интернет-профессий будущего",
@@ -11,6 +11,7 @@ class PostRepositoryInMemoryImpl: PostRepository {
         published = "21 мая в 18:36",
         likedByMe = false,
         likCount = 5450,
+        shareByMe = false,
         shareCount = 1250,
         countView = 4450
     )
@@ -18,14 +19,30 @@ class PostRepositoryInMemoryImpl: PostRepository {
     override fun get(): LiveData<Post> = data
 
     override fun like() {
-        post = post.copy(likedByMe = (!post.likedByMe))
+        post = post.copy(
+            likedByMe = (!post.likedByMe),
+            likCount = post.likCount + if (post.likedByMe) -1 else 1
+        )
         data.value = post
 
     }
+
+  //  override fun sharing() {
+  //      post = post.copy(
+  //          shareByMe = (!post.shareByMe),
+  //          shareCount = post.shareCount + if (post.shareByMe) -1 else 1
+  //      )
+  //      data.value = post
+  //  }
 
     override fun sharing() {
         post = post.copy(shareCount = (post.shareCount + 1))
         data.value = post
-    }
 
+}
+
+    override fun looking() {
+        post = post.copy(countView = (post.countView + 1))
+        data.value = post
+    }
 }
