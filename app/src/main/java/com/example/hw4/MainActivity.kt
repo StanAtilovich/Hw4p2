@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.example.hw4.adapter.PostAdapter
 
 import com.example.hw4.databinding.ActivityMainBinding
+import com.example.hw4.databinding.CardPostBinding
 
 
 class MainActivity : AppCompatActivity() {
@@ -19,80 +21,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val viewModel: PostViewModel by viewModels()
-        viewModel.data.observe(this) { post ->
-            with(binding) {
-                author.text = post.author
-                published.text = post.published
-                content.text = post.content
-
-                    // val post = Post(
-               //     id = 1,
-               //     author = "Нетология. Университет интернет-профессий будущего",
-               //     content = "Привет, это новая Нетология! Когда-то Нетология начиналась с интенсивов по онлайн-маркетингу. Затем появились курсы по дизайну, разработке, аналитике и управлению. Мы растём сами и помогаем расти студентам: от новичков до уверенных профессионалов. Но самое важное остаётся с нами: мы верим, что в каждом уже есть сила, которая заставляет хотеть больше, целиться выше, бежать быстрее. Наша миссия — помочь встать на путь роста и начать цепочку перемен → http://netolo.gy/fyb",
-               //     published = "21 мая в 18:36",
-               //     likedByMe = false,
-               //     likCount = 5450,
-               //     shareByMe = false,
-               //     shareCount = 1250,
-               //     countView = 4450
-                // )
-                binding.apply {
-                    author.text = post.author
-                    published.text = post.published
-                    content.text = post.content
-                    textLikes.text = Calc.intToText(post.likCount)
-                    textShares.text = Calc.intToShareText(post.shareCount)
-                    textViews.text = Calc.intToViewText(post.countView)
-
-                    root.setOnClickListener {
-                        Log.d("stuff", "stuff")
-                    }
-                    avatar.setOnClickListener {
-                        Log.d("stuff", "avatar")
-                    }
-                    // likes.setOnClickListener {
-                    //     Log.d("stuff", "like")
-                    //    post.likedByMe = !post.likedByMe
-                    likes.setImageResource(
-                        if (post.likedByMe) R.drawable.ic_baseline_favorite_24
-                        else R.drawable.ic_baseline_favorite_border_24
-                    )
-                    //     if (post.likedByMe) post.likCount++ else post.likCount--
-                    //     textLikes.text = Calc.intToText(post.likCount)
-
-                    likes.setOnClickListener {
-                        viewModel.like()
-                    }
-                    shares.setOnClickListener {
-                        viewModel.sharing()
-                    }
-                    views.setOnClickListener {
-                        viewModel.looking()
-                    }
-
-                }
-                // shares.setOnClickListener {
-                //     if (post.shareByMe) post.shareCount++ else post.shareCount--
-                //     textShares.text = Calc.intToShareText(post.shareCount)
-                // }
-                // shares.setOnClickListener {
-                //     post.shareCount++
-                //     textShares.text = Calc.intToShareText(post.shareCount)
-//
-            }
-
+        val adapter = PostAdapter {
+            viewModel.likeById(it.id)
         }
-            // binding.likes.setOnClickListener {
-       //     viewModel.like()
-                // }
-      //  binding.shares.setOnClickListener {
-      //      viewModel.sharing()
-      //  }
-      //  binding.views.setOnClickListener {
-      //      viewModel.looking()
-      //  }
+        binding.post.adapter = adapter
+        viewModel.data.observe(this) { post ->
+            adapter.submitList(post)
+        }
     }
 }
+
 
 
 
