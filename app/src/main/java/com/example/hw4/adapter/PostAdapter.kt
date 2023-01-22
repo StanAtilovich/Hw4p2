@@ -10,13 +10,17 @@ import com.example.hw4.Post
 import com.example.hw4.R
 import com.example.hw4.databinding.CardPostBinding
 
+typealias OnLikeListener = (Post) -> Unit
+typealias OnShareListener = (Post) -> Unit
+
 class PostAdapter(
-    private val likeClickListener: (Post) -> Unit,
+    private val likeClickListener: OnLikeListener,
+    private val shareClickListener: OnShareListener,
 ) : ListAdapter<Post,PostViewHolder>(PostItemCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val binding = (CardPostBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-        return PostViewHolder(binding, likeClickListener)
+        return PostViewHolder(binding, likeClickListener,shareClickListener)
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
@@ -29,7 +33,9 @@ class PostAdapter(
 
 class PostViewHolder(
     private val binding: CardPostBinding,
-    private val likeClickListener: (Post) -> Unit
+    private val likeClickListener: OnLikeListener,
+    private val shareClickListener: OnShareListener,
+
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(post: Post) {
@@ -46,7 +52,12 @@ class PostViewHolder(
                 else R.drawable.ic_baseline_favorite_border_24
             )
             likes.setOnClickListener {
-                likeClickListener(post)
+                 likeClickListener(post)
+            }
+            textLikes.text = post.likCount.toString()
+
+            shares.setOnClickListener{
+                shareClickListener(post)
             }
 
         }

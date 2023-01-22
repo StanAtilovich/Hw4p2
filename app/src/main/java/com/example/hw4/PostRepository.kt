@@ -4,6 +4,6 @@ import androidx.lifecycle.LiveData
 interface PostRepository {
     fun get(): LiveData<List<Post>>
     fun likedById(id: Long)
-    fun sharing()
+    fun sharing(id: Long)
     fun looking()
 }
