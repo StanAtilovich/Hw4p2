@@ -61,6 +61,11 @@ class PostRepositoryInMemoryImpl : PostRepository {
         TODO("Not yet implemented")
     }
 
+    override fun removeById(id: Long) {
+        post = post.filter { it.id != id }
+        data.value = post
+    }
+
 
     //  override fun looking(id: Long) {
  //      post = post.map {

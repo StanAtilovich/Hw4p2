@@ -1,7 +1,9 @@
 package com.example.hw4.adapter
 
+
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -10,17 +12,20 @@ import com.example.hw4.Post
 import com.example.hw4.R
 import com.example.hw4.databinding.CardPostBinding
 
-typealias OnLikeListener = (Post) -> Unit
-typealias OnShareListener = (Post) -> Unit
+
+typealias OnLikeListener = (post: Post) -> Unit
+typealias OnShareListener = (post: Post) -> Unit
+typealias OnRemoveListener = (post: Post) -> Unit
 
 class PostAdapter(
     private val likeClickListener: OnLikeListener,
     private val shareClickListener: OnShareListener,
-) : ListAdapter<Post,PostViewHolder>(PostItemCallback()) {
+    private val onRemoveListener: OnRemoveListener,
+) : ListAdapter<Post,PostViewHolder>(PostDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val binding = (CardPostBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-        return PostViewHolder(binding, likeClickListener,shareClickListener)
+        return PostViewHolder(binding, likeClickListener,shareClickListener,onRemoveListener)
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
@@ -35,8 +40,10 @@ class PostViewHolder(
     private val binding: CardPostBinding,
     private val likeClickListener: OnLikeListener,
     private val shareClickListener: OnShareListener,
+    private val onRemoveListener: OnRemoveListener,
 
-) : RecyclerView.ViewHolder(binding.root) {
+
+    ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(post: Post) {
         with(binding) {
@@ -59,11 +66,27 @@ class PostViewHolder(
             shares.setOnClickListener{
                 shareClickListener(post)
             }
+            menu.setOnClickListener{
+                PopupMenu(it.context , it).apply {
+                    inflate(R.menu.post_menu)
+                    setOnMenuItemClickListener { item ->
+                        when(item.itemId){
+                            R.id.remove ->{
+                                onRemoveListener(post)
+                                true
+                            }
+                            else -> false
+                        }
+                    }
+                }.show()
+            }
 
         }
     }
+
+
 }
-class PostItemCallback : DiffUtil.ItemCallback<Post>() {
+class PostDiffCallback : DiffUtil.ItemCallback<Post>() {
     override fun areItemsTheSame(oldItem: Post, newItem: Post): Boolean =
         oldItem.id == newItem.id
 

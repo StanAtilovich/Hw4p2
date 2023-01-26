@@ -6,4 +6,5 @@ interface PostRepository {
     fun likedById(id: Long)
     fun sharing(id: Long)
     fun looking()
+    fun removeById(id: Long)
 }
