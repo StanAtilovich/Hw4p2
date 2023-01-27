@@ -58,7 +58,7 @@ class PostViewHolder(
                 PopupMenu(it.context, it).apply {
                     inflate(R.menu.post_menu)
                     setOnMenuItemClickListener { item ->
-                        when(itemView.id){
+                        when(item.itemId){
                             R.id.remove ->{
                                 onRemoveListener(post)
                                 true
