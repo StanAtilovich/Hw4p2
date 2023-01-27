@@ -12,16 +12,15 @@ import com.example.hw4.Post
 import com.example.hw4.R
 import com.example.hw4.databinding.CardPostBinding
 
-
-typealias OnLikeListener = (post: Post) -> Unit
-typealias OnShareListener = (post: Post) -> Unit
-typealias OnRemoveListener = (post: Post) -> Unit
+typealias OnLikeListener = (post:Post) -> Unit
+typealias OnShareListener = (post:Post) -> Unit
+typealias OnRemoveListener = (post:Post) -> Unit
 
 class PostAdapter(
     private val likeClickListener: OnLikeListener,
     private val shareClickListener: OnShareListener,
     private val onRemoveListener: OnRemoveListener,
-) : ListAdapter<Post,PostViewHolder>(PostDiffCallback()) {
+) : ListAdapter<Post,PostViewHolder>(PostItemCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val binding = (CardPostBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -32,8 +31,6 @@ class PostAdapter(
         val post = getItem(position)
         holder.bind(post)
     }
-
-
 }
 
 class PostViewHolder(
@@ -41,7 +38,6 @@ class PostViewHolder(
     private val likeClickListener: OnLikeListener,
     private val shareClickListener: OnShareListener,
     private val onRemoveListener: OnRemoveListener,
-
 
     ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -53,24 +49,16 @@ class PostViewHolder(
             textLikes.text = Calc.intToText(post.likCount)
             textShares.text = Calc.intToShareText(post.shareCount)
             textViews.text = Calc.intToViewText(post.countView)
-
             likes.setImageResource(
                 if (post.likedByMe) R.drawable.ic_baseline_favorite_24
                 else R.drawable.ic_baseline_favorite_border_24
             )
-            likes.setOnClickListener {
-                 likeClickListener(post)
-            }
-            textLikes.text = post.likCount.toString()
 
-            shares.setOnClickListener{
-                shareClickListener(post)
-            }
-            menu.setOnClickListener{
-                PopupMenu(it.context , it).apply {
+            menu.setOnClickListener {
+                PopupMenu(it.context, it).apply {
                     inflate(R.menu.post_menu)
                     setOnMenuItemClickListener { item ->
-                        when(item.itemId){
+                        when(itemView.id){
                             R.id.remove ->{
                                 onRemoveListener(post)
                                 true
@@ -81,18 +69,21 @@ class PostViewHolder(
                 }.show()
             }
 
+            likes.setOnClickListener {
+                likeClickListener(post)
+            }
+            textLikes.text = post.likCount.toString()
+
+            shares.setOnClickListener{
+                shareClickListener(post)
+            }
+
         }
     }
-
-
 }
-class PostDiffCallback : DiffUtil.ItemCallback<Post>() {
+class PostItemCallback : DiffUtil.ItemCallback<Post>() {
     override fun areItemsTheSame(oldItem: Post, newItem: Post): Boolean =
         oldItem.id == newItem.id
-
-
     override fun areContentsTheSame(oldItem: Post, newItem: Post): Boolean =
         oldItem == newItem
-
-
 }

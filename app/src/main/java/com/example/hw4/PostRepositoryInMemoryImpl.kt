@@ -3,6 +3,7 @@ package com.example.hw4
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
+
 class PostRepositoryInMemoryImpl : PostRepository {
     private var post = List(100500)
     {
@@ -15,12 +16,17 @@ class PostRepositoryInMemoryImpl : PostRepository {
             likCount = 5450,
             shareByMe = false,
             shareCount = 1250,
-           // viewByMe = false,
+            // viewByMe = false,
             countView = 4450
         )
     }
     private val data = MutableLiveData(post)
     override fun get(): LiveData<List<Post>> = data
+
+    override fun removeById(id: Long) {
+        post = post.filter { it.id !=id }
+        data.value = post
+    }
 
     override fun likedById(id: Long) {
         post = post.map {
@@ -61,19 +67,14 @@ class PostRepositoryInMemoryImpl : PostRepository {
         TODO("Not yet implemented")
     }
 
-    override fun removeById(id: Long) {
-        post = post.filter { it.id != id }
-        data.value = post
-    }
-
 
     //  override fun looking(id: Long) {
- //      post = post.map {
- //          if (it.id == id) {
- //              it.copy(countView = (post.countView + 1))
- //              data.value = post
- //          }
-        }
+    //      post = post.map {
+    //          if (it.id == id) {
+    //              it.copy(countView = (post.countView + 1))
+    //              data.value = post
+    //          }
+}
 
 
 // post = post.map {  }(countView = (post.countView + 1))
