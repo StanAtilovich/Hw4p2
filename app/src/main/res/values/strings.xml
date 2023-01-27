@@ -10,7 +10,8 @@
     <string name="textShares">15</string>
     <string name="textViews">58980</string>
     <string name="menu_remove">Remove</string>
-    <string name="post_text">Post Text</string>
+    <string name="post_text">Напишите пост</string>
     <string name="menu_edit">Edit</string>
+    <string name="description_post_like">Like</string>
 
 </resources>
