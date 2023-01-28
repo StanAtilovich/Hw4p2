@@ -5,10 +5,13 @@ import androidx.lifecycle.MutableLiveData
 
 
 class PostRepositoryInMemoryImpl : PostRepository {
+    var currentId = 1L
     private var post = List(100500)
     {
+
+
         Post(
-            id = it.toLong(),
+            id = currentId++,
             author = "Нетология. Университет интернет-профессий будущего",
             content = "Номер $it Привет, это новая Нетология! Когда-то Нетология начиналась с интенсивов по онлайн-маркетингу. Затем появились курсы по дизайну, разработке, аналитике и управлению. Мы растём сами и помогаем расти студентам: от новичков до уверенных профессионалов. Но самое важное остаётся с нами: мы верим, что в каждом уже есть сила, которая заставляет хотеть больше, целиться выше, бежать быстрее. Наша миссия — помочь встать на путь роста и начать цепочку перемен → http://netolo.gy/fyb",
             published = "21 мая в 18:36",
@@ -24,9 +27,23 @@ class PostRepositoryInMemoryImpl : PostRepository {
     override fun get(): LiveData<List<Post>> = data
 
     override fun removeById(id: Long) {
-        post = post.filter { it.id !=id }
+        post = post.filter { it.id != id }
         data.value = post
     }
+
+    override fun save(post: Post) {
+        this.post = listOf(
+            post.copy(
+                id = currentId++,
+                author = "me",
+                likedByMe = false,
+                published = "now",
+            )
+        ) + post
+        data.value = listOf(post)
+        return
+    }
+
 
     override fun likedById(id: Long) {
         post = post.map {
