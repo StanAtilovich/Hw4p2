@@ -1,7 +1,6 @@
 package com.example.hw4
 
 
-
 import android.os.Bundle
 
 import android.widget.Toast
@@ -13,13 +12,13 @@ import com.example.hw4.adapter.PostAdapter
 import com.example.hw4.databinding.ActivityMainBinding
 
 
-
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         val viewModel: PostViewModel by viewModels()
         val adapter = PostAdapter(
             likeClickListener = {
@@ -46,7 +45,7 @@ class MainActivity : AppCompatActivity() {
                     ).show()
                     return@setOnClickListener
                 }
-            viewModel.changeContent(text.toString())
+                viewModel.changeContent(text.toString())
                 viewModel.save()
 
                 setText("")

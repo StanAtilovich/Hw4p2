@@ -5,15 +5,13 @@ import androidx.lifecycle.MutableLiveData
 
 
 class PostRepositoryInMemoryImpl : PostRepository {
-    var currentId = 1L
-    private var post = List(100500)
-    {
-
+    private var nextId = 0L
+    private var post = listOf(
 
         Post(
-            id = currentId++,
+            id = nextId++,
             author = "Нетология. Университет интернет-профессий будущего",
-            content = "Номер $it Привет, это новая Нетология! Когда-то Нетология начиналась с интенсивов по онлайн-маркетингу. Затем появились курсы по дизайну, разработке, аналитике и управлению. Мы растём сами и помогаем расти студентам: от новичков до уверенных профессионалов. Но самое важное остаётся с нами: мы верим, что в каждом уже есть сила, которая заставляет хотеть больше, целиться выше, бежать быстрее. Наша миссия — помочь встать на путь роста и начать цепочку перемен → http://netolo.gy/fyb",
+            content = "Номер $nextId Привет, это новая Нетология! Когда-то Нетология начиналась с интенсивов по онлайн-маркетингу. Затем появились курсы по дизайну, разработке, аналитике и управлению. Мы растём сами и помогаем расти студентам: от новичков до уверенных профессионалов. Но самое важное остаётся с нами: мы верим, что в каждом уже есть сила, которая заставляет хотеть больше, целиться выше, бежать быстрее. Наша миссия — помочь встать на путь роста и начать цепочку перемен → http://netolo.gy/fyb",
             published = "21 мая в 18:36",
             likedByMe = false,
             likCount = 5450,
@@ -22,19 +20,14 @@ class PostRepositoryInMemoryImpl : PostRepository {
             // viewByMe = false,
             countView = 4450
         )
-    }
+    ).reversed()
     private val data = MutableLiveData(post)
     override fun get(): LiveData<List<Post>> = data
-
-    override fun removeById(id: Long) {
-        post = post.filter { it.id != id }
-        data.value = post
-    }
 
     override fun save(post: Post) {
         this.post = listOf(
             post.copy(
-                id = currentId++,
+                id = nextId + 1,
                 author = "me",
                 likedByMe = false,
                 published = "now",
@@ -42,7 +35,21 @@ class PostRepositoryInMemoryImpl : PostRepository {
         ) + post
         data.value = listOf(post)
         return
+
+
+
     }
+
+
+
+
+
+    override fun removeById(id: Long) {
+        post = post.filter { it.id != id }
+        data.value = post
+    }
+
+
 
 
     override fun likedById(id: Long) {
