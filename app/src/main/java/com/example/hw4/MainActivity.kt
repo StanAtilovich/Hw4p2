@@ -32,8 +32,8 @@ class MainActivity : AppCompatActivity() {
             }
         )
         binding.post.adapter = adapter
-        viewModel.data.observe(this) { post ->
-            adapter.submitList(post)
+        viewModel.data.observe(this) { posts ->
+            adapter.submitList(posts)
         }
         binding.save.setOnClickListener {
             with(binding.content) {

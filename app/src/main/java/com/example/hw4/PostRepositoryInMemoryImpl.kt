@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 
 
 class PostRepositoryInMemoryImpl : PostRepository {
-    private var nextId = 0L
-    private var post = listOf(
+    private var nextId = 1L
+    private var posts = listOf(
 
         Post(
             id = nextId++,
@@ -21,39 +21,39 @@ class PostRepositoryInMemoryImpl : PostRepository {
             countView = 4450
         )
     ).reversed()
-    private val data = MutableLiveData(post)
+
+    private val data = MutableLiveData(posts)
+
     override fun get(): LiveData<List<Post>> = data
 
     override fun save(post: Post) {
-        this.post = listOf(
-            post.copy(
-                id = nextId + 1,
-                author = "me",
-                likedByMe = false,
-                published = "now",
-            )
-        ) + post
-        data.value = listOf(post)
-        return
-
-
-
+        if (post.id == 0L) {
+            posts = listOf(
+                post.copy(
+                    id = nextId + 1,
+                    author = "me",
+                    likedByMe = false,
+                    published = "now",
+                )
+            ) + posts
+            data.value = posts
+            return
+        }
+        posts = posts.map {
+            if (it.id != post.id) it else it.copy(content = post.content)
+        }
+        data.value = posts
     }
-
-
-
 
 
     override fun removeById(id: Long) {
-        post = post.filter { it.id != id }
-        data.value = post
+        posts = posts.filter { it.id != id }
+        data.value = posts
     }
 
 
-
-
     override fun likedById(id: Long) {
-        post = post.map {
+        posts = posts.map {
             if (it.id == id) {
                 it.copy(
                     likedByMe = !it.likedByMe, likCount = if (it.likedByMe) {
@@ -66,16 +66,16 @@ class PostRepositoryInMemoryImpl : PostRepository {
                 it
             }
         }
-        data.value = post
+        data.value = posts
 
     }
 
     override fun sharing(id: Long) {
-        post = post.map {
+        posts = posts.map {
             if (it.id == id) {
                 it.copy(
                     shareByMe = !it.shareByMe, shareCount = if (it.shareByMe) {
-                        it.shareCount - 1
+                        it.shareCount + 1
                     } else {
                         it.shareCount + 1
                     }
@@ -84,7 +84,7 @@ class PostRepositoryInMemoryImpl : PostRepository {
                 it
             }
         }
-        data.value = post
+        data.value = posts
     }
 
     override fun looking() {
