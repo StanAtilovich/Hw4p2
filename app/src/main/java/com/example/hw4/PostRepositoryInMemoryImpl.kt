@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 
 
 class PostRepositoryInMemoryImpl : PostRepository {
-    private var nextId = 1L
+    private var nextId = 0L
     private var posts = listOf(
 
         Post(
@@ -21,16 +21,14 @@ class PostRepositoryInMemoryImpl : PostRepository {
             countView = 4450
         )
     ).reversed()
-
     private val data = MutableLiveData(posts)
-
     override fun get(): LiveData<List<Post>> = data
 
     override fun save(post: Post) {
         if (post.id == 0L) {
             posts = listOf(
                 post.copy(
-                    id = nextId + 1,
+                    id = nextId ++,
                     author = "me",
                     likedByMe = false,
                     published = "now",
