@@ -9,9 +9,9 @@
     <string name="textLikes">14</string>
     <string name="textShares">15</string>
     <string name="textViews">58980</string>
-    <string name="menu_remove">Remove</string>
+    <string name="menu_remove">Удалить</string>
     <string name="post_text">Напишите пост</string>
-    <string name="menu_edit">Edit</string>
+    <string name="menu_edit">Изменить</string>
     <string name="description_post_like">Like</string>
     <string name="error_empty_content">Content can\'t be empty</string>
 
