@@ -4,6 +4,7 @@ package com.example.hw4
 import android.os.Bundle
 import android.view.View
 
+
 import android.widget.Toast
 
 import androidx.activity.viewModels
@@ -35,8 +36,9 @@ class MainActivity : AppCompatActivity() {
             override fun onRemove(post: Post) {
                 viewModel.removeById(post.id)
             }
-            override fun onEdit(post: Post){
-                binding.root.visibility = View.VISIBLE
+
+            override fun onEdit(post: Post) {
+                binding.editGroup.visibility = View.VISIBLE
                 viewModel.edit(post)
             }
         }
@@ -72,17 +74,16 @@ class MainActivity : AppCompatActivity() {
 
                 setText("")
                 clearFocus()
-                binding.root.visibility = View.VISIBLE
                 AndroidUtils.hideKeyboard(this)
-
+                binding.editGroup.visibility = View.VISIBLE
             }
         }
         binding.deleted.setOnClickListener {
-            with(binding.content){
+            with(binding.content) {
                 setText("")
                 clearFocus()
                 AndroidUtils.hideKeyboard(this)
-                binding.root.visibility = View.VISIBLE
+                binding.editGroup.visibility = View.GONE
             }
         }
     }

@@ -28,7 +28,7 @@ class PostRepositoryInMemoryImpl : PostRepository {
         if (post.id == 0L) {
             posts = listOf(
                 post.copy(
-                    id = nextId ++,
+                    id = nextId++,
                     author = "me",
                     likedByMe = false,
                     published = "now",
@@ -70,56 +70,12 @@ class PostRepositoryInMemoryImpl : PostRepository {
 
     override fun sharing(id: Long) {
         posts = posts.map {
-            if (it.id == id) {
-                it.copy(
-                    shareByMe = !it.shareByMe, shareCount = if (it.shareByMe) {
-                        it.shareCount + 1
-                    } else {
-                        it.shareCount + 1
-                    }
-                )
-            } else {
-                it
-            }
+            if (it.id != id) it else it.copy(shareCount = it.shareCount + 1)
         }
+
         data.value = posts
     }
 
-    override fun looking() {
-        TODO("Not yet implemented")
-    }
-
-
-    //  override fun looking(id: Long) {
-    //      post = post.map {
-    //          if (it.id == id) {
-    //              it.copy(countView = (post.countView + 1))
-    //              data.value = post
-    //          }
 }
 
 
-// post = post.map {  }(countView = (post.countView + 1))
-//  data.value = post
-
-
-//}
-
-//  override fun sharing() {
-//      post = post.copy(
-//          shareByMe = (!post.shareByMe),
-//          shareCount = post.shareCount + if (post.shareByMe) -1 else 1
-//      )
-//      data.value = post
-//  }
-
-//    override fun sharing() {
-//        post = post.copy(shareCount = (post.shareCount + 1))
-//        data.value = post
-
-//    }
-
-//    override fun looking() {
-//        post = post.copy(countView = (post.countView + 1))
-//    }
-//}

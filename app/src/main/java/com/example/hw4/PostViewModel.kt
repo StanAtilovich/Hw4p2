@@ -27,21 +27,22 @@ class PostViewModel : ViewModel() {
         }
         edited.value = empty
     }
+
     fun edit(post: Post) {
         edited.value = post
     }
 
     fun changeContent(content: String) {
-            val text = content.trim()
-            if (edited.value?.content == text) {
-                return
-            }
-            edited.value = edited.value?.copy(content = text)
+        val text = content.trim()
+        if (edited.value?.content == text) {
+            return
+        }
+        edited.value = edited.value?.copy(content = text)
     }
 
     fun likeById(id: Long) = repository.likedById(id)
     fun sharing(id: Long) = repository.sharing(id)
-    fun looking(id: Long) = repository.looking()
+
     fun removeById(id: Long) = repository.removeById(id)
 
 }
