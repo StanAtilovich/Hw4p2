@@ -39,6 +39,9 @@ class PostViewModel : ViewModel() {
         }
         edited.value = edited.value?.copy(content = text)
     }
+    fun clear(){
+        edited.value  = empty
+    }
 
     fun likeById(id: Long) = repository.likedById(id)
     fun sharing(id: Long) = repository.sharing(id)

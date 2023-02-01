@@ -80,12 +80,15 @@ class MainActivity : AppCompatActivity() {
         }
         binding.deleted.setOnClickListener {
             with(binding.content) {
+                viewModel.clear()
                 setText("")
                 clearFocus()
                 AndroidUtils.hideKeyboard(this)
-                binding.editGroup.visibility = View.GONE
+                binding.editGroup.visibility = View.VISIBLE
             }
+            return@setOnClickListener
         }
+
     }
 }
 

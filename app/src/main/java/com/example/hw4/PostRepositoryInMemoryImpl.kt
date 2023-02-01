@@ -17,7 +17,6 @@ class PostRepositoryInMemoryImpl : PostRepository {
             likCount = 5450,
             shareByMe = false,
             shareCount = 1250,
-            // viewByMe = false,
             countView = 4450
         )
     ).reversed()
