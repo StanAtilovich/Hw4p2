@@ -1,6 +1,7 @@
 package com.example.hw4.adapter
 
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.PopupMenu
@@ -40,18 +41,20 @@ class PostViewHolder(
 
     ) : RecyclerView.ViewHolder(binding.root) {
 
+    @SuppressLint("SuspiciousIndentation")
     fun bind(post: Post) {
         with(binding) {
             author.text = post.author
             published.text = post.published
             content.text = post.content
-            textLikes.text = Calc.intToText(post.likCount)
-            textShares.text = Calc.intToShareText(post.shareCount)
-            textViews.text = Calc.intToViewText(post.countView)
-            likes.setImageResource(
-                if (post.likedByMe) R.drawable.ic_baseline_favorite_24
-                else R.drawable.ic_baseline_favorite_border_24
-            )
+            likes.isChecked = post.likedByMe
+            likes.text = post.likCount.toString()
+            shares.isChecked = post.shareByMe
+            shares.text = post.shareCount.toString()
+            views.isChecked = post.viewByMe
+            views.text = post.countView.toString()
+
+
 
             menu.setOnClickListener {
                 PopupMenu(it.context, it).apply {
@@ -75,7 +78,7 @@ class PostViewHolder(
             likes.setOnClickListener {
                 onInteractionListener.onLike(post)
             }
-            textLikes.text = post.likCount.toString()
+            //textLikes.text = post.likCount.toString()
 
             shares.setOnClickListener {
                 onInteractionListener.onShare(post)
