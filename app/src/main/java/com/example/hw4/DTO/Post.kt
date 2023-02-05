@@ -1,4 +1,4 @@
-package com.example.hw4
+package com.example.hw4.DTO
 
 data class Post(
     val id: Long,

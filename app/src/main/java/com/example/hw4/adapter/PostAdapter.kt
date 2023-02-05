@@ -8,8 +8,7 @@ import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.hw4.Calc
-import com.example.hw4.Post
+import com.example.hw4.DTO.Post
 import com.example.hw4.R
 import com.example.hw4.databinding.CardPostBinding
 

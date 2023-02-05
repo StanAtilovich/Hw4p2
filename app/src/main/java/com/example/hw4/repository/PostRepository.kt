@@ -1,6 +1,7 @@
-package com.example.hw4
+package com.example.hw4.repository
 
 import androidx.lifecycle.LiveData
+import com.example.hw4.DTO.Post
 
 interface PostRepository {
     fun get(): LiveData<List<Post>>

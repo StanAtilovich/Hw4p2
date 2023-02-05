@@ -13,6 +13,10 @@
     <string name="post_text">Напишите пост</string>
     <string name="menu_edit">Изменить</string>
     <string name="description_post_like">Like</string>
-    <string name="error_empty_content">Content can\'t be empty</string>
+    <string name="error_empty_content">Контекст не может быть пустой</string>
+    <string name="chooser_share_post" />
+    <string name="text_intent_handler">Здесь будет текст\n поста </string>
+    <string name="add_post">Добавить пост</string>
+    <string name="save">Сохранить</string>
 
 </resources>

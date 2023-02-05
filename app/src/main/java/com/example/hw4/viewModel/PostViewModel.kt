@@ -1,7 +1,10 @@
-package com.example.hw4
+package com.example.hw4.viewModel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.hw4.DTO.Post
+import com.example.hw4.repository.PostRepository
+import com.example.hw4.repository.PostRepositoryInMemoryImpl
 
 private val empty = Post(
     id = 0,

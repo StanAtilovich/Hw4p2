@@ -1,7 +1,8 @@
-package com.example.hw4
+package com.example.hw4.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.hw4.DTO.Post
 
 
 class PostRepositoryInMemoryImpl : PostRepository {
