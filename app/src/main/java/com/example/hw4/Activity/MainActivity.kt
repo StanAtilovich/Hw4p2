@@ -46,6 +46,8 @@ class MainActivity : AppCompatActivity() {
                 val shareIntent =
                     Intent.createChooser(intent,getString(R.string.chooser_share_post))
                 startActivity(shareIntent)
+
+                viewModel.sharing(post.id)
             }
 
             override fun onRemove(post: Post) {

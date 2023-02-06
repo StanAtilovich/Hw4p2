@@ -10,7 +10,7 @@ class PostRepositoryInMemoryImpl : PostRepository {
     private var posts = listOf(
 
         Post(
-            id = nextId++,
+            id = ++nextId,
             author = "Нетология. Университет интернет-профессий будущего",
             content = "Номер $nextId Привет, это новая Нетология! Когда-то Нетология начиналась с интенсивов по онлайн-маркетингу. Затем появились курсы по дизайну, разработке, аналитике и управлению. Мы растём сами и помогаем расти студентам: от новичков до уверенных профессионалов. Но самое важное остаётся с нами: мы верим, что в каждом уже есть сила, которая заставляет хотеть больше, целиться выше, бежать быстрее. Наша миссия — помочь встать на путь роста и начать цепочку перемен → http://netolo.gy/fyb",
             published = "21 мая в 18:36",
@@ -18,7 +18,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             likCount = 5450,
             shareByMe = false,
             shareCount = 1250,
-            countView = 4450
+            countView = 4450,
+            //video = "https://www.youtube.com/watch?v=AfqjC5jFv8I&t=5s"
         )
     ).reversed()
     private val data = MutableLiveData(posts)

@@ -52,6 +52,10 @@ class PostViewHolder(
             shares.text = post.shareCount.toString()
             views.isChecked = post.viewByMe
             views.text = post.countView.toString()
+          //  val videoView= post.video
+          //  if (videoView.isNotEmpty()){
+          //
+          //  }
 
 
 
