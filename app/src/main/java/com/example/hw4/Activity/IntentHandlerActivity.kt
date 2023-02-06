@@ -27,8 +27,10 @@ class IntentHandlerActivity : AppCompatActivity() {
                     }
                     .show()
                 return@let
+            }else{
+                binding.postText.text = text
             }
-            // TODO: handle text
+
         }
     }
 }

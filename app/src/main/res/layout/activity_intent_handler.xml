@@ -6,4 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".Activity.IntentHandlerActivity">
 
+    <TextView
+        android:id="@+id/postText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textSize="30sp"
+        tools:text="@string/text_intent_handler"
+        android:padding="32dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
