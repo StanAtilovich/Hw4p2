@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.hw4.R
+
 import com.example.hw4.databinding.ActivityNewPostBinding
 
 class NewPostActivity : AppCompatActivity() {

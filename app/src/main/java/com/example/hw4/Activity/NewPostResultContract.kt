@@ -3,8 +3,7 @@ package com.example.hw4.Activity
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
+
 import androidx.activity.result.contract.ActivityResultContract
 
 class NewPostResultContract : ActivityResultContract<Unit, String?>() {
