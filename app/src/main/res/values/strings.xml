@@ -18,5 +18,6 @@
     <string name="text_intent_handler">Здесь будет текст\n поста </string>
     <string name="add_post">Добавить пост</string>
     <string name="save">Сохранить</string>
+    <string name="error_no_activity_to_open_media">Должно быть видео</string>
 
 </resources>

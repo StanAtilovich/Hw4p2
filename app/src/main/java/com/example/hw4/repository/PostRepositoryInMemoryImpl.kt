@@ -19,7 +19,7 @@ class PostRepositoryInMemoryImpl : PostRepository {
             shareByMe = false,
             shareCount = 1250,
             countView = 4450,
-            //video = "https://www.youtube.com/watch?v=AfqjC5jFv8I&t=5s"
+            video = "https://www.youtube.com/watch?v=VwQk8luHGLE"
         )
     ).reversed()
     private val data = MutableLiveData(posts)

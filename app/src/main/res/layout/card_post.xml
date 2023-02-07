@@ -71,6 +71,7 @@
         android:layout_marginTop="@dimen/indent"
         android:autoLink="web"
         app:layout_constraintTop_toBottomOf="@+id/barrierTop"
+        tools:layout_editor_absoluteX="16dp"
         tools:text="@sample/posts.json/data/content" />
 
     <androidx.constraintlayout.widget.Barrier
@@ -122,6 +123,17 @@
         app:layout_constraintEnd_toEndOf="@id/content"
         app:layout_constraintTop_toTopOf="@+id/shares"
         app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/videoPlay"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:layout_constraintBottom_toTopOf="@+id/shares"
+        app:layout_constraintEnd_toEndOf="@+id/content"
+        app:layout_constraintStart_toStartOf="@+id/content"
+        app:layout_constraintTop_toBottomOf="@+id/content"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/but_play_50" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

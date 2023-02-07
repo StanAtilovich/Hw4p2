@@ -2,7 +2,9 @@ package com.example.hw4.adapter
 
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
@@ -17,6 +19,7 @@ interface OnInteractionListener {
     fun onShare(post: Post) {}
     fun onRemove(post: Post) {}
     fun onEdit(post: Post) {}
+    fun onplayVideo(post: Post){}
 }
 
 class PostAdapter(
@@ -52,10 +55,9 @@ class PostViewHolder(
             shares.text = post.shareCount.toString()
             views.isChecked = post.viewByMe
             views.text = post.countView.toString()
-          //  val videoView= post.video
-          //  if (videoView.isNotEmpty()){
-          //
-          //  }
+
+
+
 
 
 
@@ -85,6 +87,9 @@ class PostViewHolder(
 
             shares.setOnClickListener {
                 onInteractionListener.onShare(post)
+            }
+            videoPlay.setOnClickListener{
+                onInteractionListener.onplayVideo(post)
             }
 
         }
