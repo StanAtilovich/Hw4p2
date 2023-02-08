@@ -25,6 +25,7 @@ import com.example.hw4.databinding.ActivityMainBinding
 import com.example.hw4.viewModel.PostViewModel
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.card_post.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -65,7 +66,10 @@ class MainActivity : AppCompatActivity() {
             @SuppressLint("QueryPermissionsNeeded")
             override fun onplayVideo(post: Post){
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.video))
+                startActivity(intent)
+
                 if (intent.resolveActivity(packageManager)==null){
+
                     Snackbar.make(
                         binding.root, getString(R.string.error_no_activity_to_open_media),
                         BaseTransientBottomBar.LENGTH_SHORT
