@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +20,7 @@ interface OnInteractionListener {
     fun onShare(post: Post) {}
     fun onRemove(post: Post) {}
     fun onEdit(post: Post) {}
-    fun onplayVideo(post: Post){}
+    fun onplayVideo(post: Post) {}
 }
 
 class PostAdapter(
@@ -55,7 +56,7 @@ class PostViewHolder(
             shares.text = post.shareCount.toString()
             views.isChecked = post.viewByMe
             views.text = post.countView.toString()
-
+            videoGroup.isVisible = post.video != null
 
 
 
@@ -88,7 +89,7 @@ class PostViewHolder(
             shares.setOnClickListener {
                 onInteractionListener.onShare(post)
             }
-            videoPlay.setOnClickListener{
+            videoPlay.setOnClickListener {
                 onInteractionListener.onplayVideo(post)
             }
 

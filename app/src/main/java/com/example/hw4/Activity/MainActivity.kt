@@ -65,16 +65,12 @@ class MainActivity : AppCompatActivity() {
             }
             @SuppressLint("QueryPermissionsNeeded")
             override fun onplayVideo(post: Post){
+
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.video))
                 startActivity(intent)
 
-                if (intent.resolveActivity(packageManager)==null){
+                if (intent.resolveActivity(packageManager)==null) {
 
-                    Snackbar.make(
-                        binding.root, getString(R.string.error_no_activity_to_open_media),
-                        BaseTransientBottomBar.LENGTH_SHORT
-                    ).show()
-                    return
                 }
             }
 
