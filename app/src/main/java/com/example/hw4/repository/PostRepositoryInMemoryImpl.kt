@@ -29,7 +29,7 @@ class PostRepositoryInMemoryImpl : PostRepository {
         if (post.id == 0L) {
             posts = listOf(
                 post.copy(
-                    id = nextId++,
+                    id = ++nextId,
                     author = "me",
                     likedByMe = false,
                     published = "now",

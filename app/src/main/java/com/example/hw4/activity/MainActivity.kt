@@ -33,9 +33,17 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val viewModel: PostViewModel by viewModels()
-        val adapter = PostAdapter(object : OnInteractionListener {
 
+
+
+        val viewModel: PostViewModel by viewModels()
+        val newPostLauncher = registerForActivityResult(NewPostResultContract()) { result ->
+            result ?: return@registerForActivityResult
+            viewModel.changeContent(result)
+            viewModel.save()
+        }
+
+        val adapter = PostAdapter(object : OnInteractionListener {
             override fun onLike(post: Post) {
                 viewModel.likeById(post.id)
             }
@@ -60,16 +68,16 @@ class MainActivity : AppCompatActivity() {
             override fun onEdit(post: Post) {
                 binding.editGroup.visibility = View.VISIBLE
                 viewModel.edit(post)
-
+                newPostLauncher.launch(post.content)
             }
             @SuppressLint("QueryPermissionsNeeded")
             override fun onplayVideo(post: Post){
 
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.video))
                 startActivity(intent)
-
-
             }
+
+
 
         }
 
@@ -119,11 +127,7 @@ class MainActivity : AppCompatActivity() {
             return@setOnClickListener
         }
 
-        val newPostLauncher = registerForActivityResult(NewPostResultContract()) { result ->
-            result ?: return@registerForActivityResult
-            viewModel.changeContent(result)
-            viewModel.save()
-        }
+
         binding.fab.setOnClickListener{
             newPostLauncher.launch(null)
         }
