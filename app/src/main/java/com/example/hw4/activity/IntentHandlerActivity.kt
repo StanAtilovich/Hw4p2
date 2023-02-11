@@ -1,4 +1,4 @@
-package com.example.hw4.Activity
+package com.example.hw4.activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

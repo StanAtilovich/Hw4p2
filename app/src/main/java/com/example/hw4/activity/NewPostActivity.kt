@@ -1,4 +1,4 @@
-package com.example.hw4.Activity
+package com.example.hw4.activity
 
 import android.app.Activity
 import android.content.Intent
@@ -12,6 +12,7 @@ class NewPostActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityNewPostBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.edit.setText(intent?.getStringExtra(Intent.EXTRA_TEXT))
         binding.edit.requestFocus()
         binding.ok.setOnClickListener {
             val intent = Intent()

@@ -1,4 +1,4 @@
-package com.example.hw4.Activity
+package com.example.hw4.activity
 
 
 
@@ -23,8 +23,6 @@ import com.example.hw4.adapter.PostAdapter
 
 import com.example.hw4.databinding.ActivityMainBinding
 import com.example.hw4.viewModel.PostViewModel
-import com.google.android.material.snackbar.BaseTransientBottomBar
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.card_post.*
 
 
@@ -62,6 +60,7 @@ class MainActivity : AppCompatActivity() {
             override fun onEdit(post: Post) {
                 binding.editGroup.visibility = View.VISIBLE
                 viewModel.edit(post)
+
             }
             @SuppressLint("QueryPermissionsNeeded")
             override fun onplayVideo(post: Post){
@@ -69,9 +68,7 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.video))
                 startActivity(intent)
 
-                if (intent.resolveActivity(packageManager)==null) {
 
-                }
             }
 
         }
@@ -128,7 +125,7 @@ class MainActivity : AppCompatActivity() {
             viewModel.save()
         }
         binding.fab.setOnClickListener{
-            newPostLauncher.launch()
+            newPostLauncher.launch(null)
         }
 
 

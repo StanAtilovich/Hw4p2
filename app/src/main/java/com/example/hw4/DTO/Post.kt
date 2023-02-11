@@ -1,6 +1,6 @@
 package com.example.hw4.DTO
 
-import android.provider.MediaStore.Video
+
 
 data class Post(
     val id: Long,
