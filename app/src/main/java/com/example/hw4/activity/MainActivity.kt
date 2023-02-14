@@ -1,8 +1,8 @@
 package com.example.hw4.activity
 
 
-
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -23,6 +23,8 @@ import com.example.hw4.adapter.PostAdapter
 
 import com.example.hw4.databinding.ActivityMainBinding
 import com.example.hw4.viewModel.PostViewModel
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.card_post.*
 
 
@@ -34,6 +36,20 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
+  //     run{
+  //         val preferences = getPreferences(Context.MODE_PRIVATE)
+  //         preferences.edit().apply {
+  //             putString("key", "valuesxcscasc")
+  //             commit()
+  //         }
+  //     }
+  //     run{
+  //         getPreferences(Context.MODE_PRIVATE)
+  //             .getString("key", "no value")?.let {
+  //                 Snackbar.make(binding.root, it, BaseTransientBottomBar.LENGTH_INDEFINITE)
+  //                     .show()
+  //             }
+  //     }
 
 
         val viewModel: PostViewModel by viewModels()
@@ -52,10 +68,10 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent().apply {
                     action = Intent.ACTION_SEND
                     putExtra(Intent.EXTRA_TEXT, post.content)
-                    type= "text/plain"
+                    type = "text/plain"
                 }
                 val shareIntent =
-                    Intent.createChooser(intent,getString(R.string.chooser_share_post))
+                    Intent.createChooser(intent, getString(R.string.chooser_share_post))
                 startActivity(shareIntent)
 
                 viewModel.sharing(post.id)
@@ -70,13 +86,13 @@ class MainActivity : AppCompatActivity() {
                 viewModel.edit(post)
                 newPostLauncher.launch(post.content)
             }
+
             @SuppressLint("QueryPermissionsNeeded")
-            override fun onplayVideo(post: Post){
+            override fun onplayVideo(post: Post) {
 
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.video))
                 startActivity(intent)
             }
-
 
 
         }
@@ -128,7 +144,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        binding.fab.setOnClickListener{
+        binding.fab.setOnClickListener {
             newPostLauncher.launch(null)
         }
 
