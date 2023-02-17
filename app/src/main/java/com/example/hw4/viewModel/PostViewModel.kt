@@ -1,14 +1,10 @@
 package com.example.hw4.viewModel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-
+import androidx.lifecycle.ViewModel
 import com.example.hw4.DTO.Post
 import com.example.hw4.repository.PostRepository
-import com.example.hw4.repository.PostRepositoryFileImpl
-import com.example.hw4.repository.PostRepositorySharedPrefsImpl
-
+import com.example.hw4.repository.PostRepositoryInMemoryImpl
 
 private val empty = Post(
     id = 0,
@@ -24,12 +20,9 @@ private val empty = Post(
     video = null
 )
 
-class PostViewModel (application: Application):AndroidViewModel(application){
-    private val repository: PostRepository = PostRepositoryFileImpl(application)
+class PostViewModel : ViewModel() {
+    private val repository: PostRepository = PostRepositoryInMemoryImpl()
     val data = repository.get()
-   // : ViewModel() {
-   // private val repository: PostRepository = PostRepositoryInMemoryImpl()
-   // val data = repository.get()
     val edited = MutableLiveData(empty)
 
     fun save() {

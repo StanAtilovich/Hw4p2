@@ -1,42 +1,41 @@
 package com.example.hw4.activity
 
 
+
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
+
+
+import android.widget.Toast
+import androidx.activity.result.launch
+
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.example.hw4.util.AndroidUtils
 import com.example.hw4.DTO.Post
+
 import com.example.hw4.R
 import com.example.hw4.adapter.OnInteractionListener
 import com.example.hw4.adapter.PostAdapter
-import com.example.hw4.databinding.FragmentFeedBinding
-import com.example.hw4.util.StringArg
+
+import com.example.hw4.databinding.ActivityMainBinding
 import com.example.hw4.viewModel.PostViewModel
 import kotlinx.android.synthetic.main.card_post.*
 
 
-class FeedFragment : Fragment() {
-    companion object {
-        var Bundle.textArg: String? by StringArg
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = FragmentFeedBinding.inflate(
-            inflater,
-            container, false
-        )
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+
+
+
         val viewModel: PostViewModel by viewModels()
         val newPostLauncher = registerForActivityResult(NewPostResultContract()) { result ->
             result ?: return@registerForActivityResult
@@ -53,10 +52,10 @@ class FeedFragment : Fragment() {
                 val intent = Intent().apply {
                     action = Intent.ACTION_SEND
                     putExtra(Intent.EXTRA_TEXT, post.content)
-                    type = "text/plain"
+                    type= "text/plain"
                 }
                 val shareIntent =
-                    Intent.createChooser(intent, getString(R.string.chooser_share_post))
+                    Intent.createChooser(intent,getString(R.string.chooser_share_post))
                 startActivity(shareIntent)
 
                 viewModel.sharing(post.id)
@@ -71,22 +70,24 @@ class FeedFragment : Fragment() {
                 viewModel.edit(post)
                 newPostLauncher.launch(post.content)
             }
-
             @SuppressLint("QueryPermissionsNeeded")
-            override fun onplayVideo(post: Post) {
+            override fun onplayVideo(post: Post){
 
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.video))
                 startActivity(intent)
             }
+
+
+
         }
 
         )
         binding.post.adapter = adapter
-        viewModel.data.observe(viewLifecycleOwner) { posts ->
+        viewModel.data.observe(this) { posts ->
             adapter.submitList(posts)
         }
 
-        viewModel.edited.observe(viewLifecycleOwner) { post ->
+        viewModel.edited.observe(this) { post ->
             if (post.id == 0L) {
                 return@observe
             }
@@ -96,15 +97,25 @@ class FeedFragment : Fragment() {
             }
         }
 
+        binding.save.setOnClickListener {
+            with(binding.content) {
+                if (text.isNullOrBlank()) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        context.getString(R.string.error_empty_content),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@setOnClickListener
+                }
+                viewModel.changeContent(text.toString())
+                viewModel.save()
 
-    //    binding.save.setOnClickListener {
-    //        viewModel.changeContent(binding.edit.text.toString())
-    //        viewModel.save()
-    //        AndroidUtils.hideKeyboard(requireView())
-    //        findNavController().navigateUp()
-    //    }
-
-
+                setText("")
+                clearFocus()
+                AndroidUtils.hideKeyboard(this)
+                binding.editGroup.visibility = View.VISIBLE
+            }
+        }
         binding.deleted.setOnClickListener {
             with(binding.content) {
                 viewModel.clear()
@@ -117,10 +128,23 @@ class FeedFragment : Fragment() {
         }
 
 
-        binding.fab.setOnClickListener {
-            findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
+        binding.fab.setOnClickListener{
+            newPostLauncher.launch(null)
         }
-        return binding.root
+
 
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
