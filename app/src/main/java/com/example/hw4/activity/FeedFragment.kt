@@ -100,12 +100,12 @@ class FeedFragment : Fragment() {
         }
 
 
-        //    binding.save.setOnClickListener {
-        //        viewModel.changeContent(binding.edit.text.toString())
-        //        viewModel.save()
-        //        AndroidUtils.hideKeyboard(requireView())
-        //        findNavController().navigateUp()
-        //    }
+            binding.save.setOnClickListener {
+                viewModel.changeContent(binding.content.text.toString()) //(binding.edit.text.toString())
+                viewModel.save()
+                AndroidUtils.hideKeyboard(requireView())
+                findNavController().navigateUp()
+            }
 
 
         binding.deleted.setOnClickListener {
