@@ -23,6 +23,9 @@ import kotlinx.android.synthetic.main.card_post.*
 
 
 class FeedFragment : Fragment() {
+    private val viewModel: PostViewModel by viewModels(
+        ownerProducer = ::requireParentFragment
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,12 +39,12 @@ class FeedFragment : Fragment() {
             container, false
         )
 
-        val viewModel: PostViewModel by viewModels()
-        val newPostLauncher = registerForActivityResult(NewPostResultContract()) { result ->
-            result ?: return@registerForActivityResult
-            viewModel.changeContent(result)
-            viewModel.save()
-        }
+        //   val viewModel: PostViewModel by viewModels()
+        //   val newPostLauncher = registerForActivityResult(NewPostResultContract()) { result ->
+        //       result ?: return@registerForActivityResult
+        //       viewModel.changeContent(result)
+        //       viewModel.save()
+        //   }
 
         val adapter = PostAdapter(object : OnInteractionListener {
             override fun onLike(post: Post) {
@@ -68,7 +71,7 @@ class FeedFragment : Fragment() {
             override fun onEdit(post: Post) {
                 binding.editGroup.visibility = View.VISIBLE
                 viewModel.edit(post)
-                newPostLauncher.launch(post.content)
+
             }
 
             @SuppressLint("QueryPermissionsNeeded")
@@ -97,12 +100,12 @@ class FeedFragment : Fragment() {
         }
 
 
-    //    binding.save.setOnClickListener {
-    //        viewModel.changeContent(binding.edit.text.toString())
-    //        viewModel.save()
-    //        AndroidUtils.hideKeyboard(requireView())
-    //        findNavController().navigateUp()
-    //    }
+        //    binding.save.setOnClickListener {
+        //        viewModel.changeContent(binding.edit.text.toString())
+        //        viewModel.save()
+        //        AndroidUtils.hideKeyboard(requireView())
+        //        findNavController().navigateUp()
+        //    }
 
 
         binding.deleted.setOnClickListener {

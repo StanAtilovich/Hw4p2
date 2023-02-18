@@ -14,9 +14,10 @@ import com.example.hw4.util.StringArg
 import com.example.hw4.viewModel.PostViewModel
 
 class NewPostFragment : Fragment() {
-    companion object{
+    companion object {
         var Bundle.textArg: String? by StringArg
     }
+
     private val viewModel: PostViewModel by viewModels(
         ownerProducer = ::requireParentFragment
     )
@@ -32,12 +33,11 @@ class NewPostFragment : Fragment() {
             false
         )
         arguments?.textArg
-            ?.let (
-                binding.edit::setText)
-        binding.edit.requestFocus()
-        binding.ok.setOnClickListener{
-            val content = binding.edit.text.toString()
-            viewModel.changeContent(content)
+            ?.let(
+                binding.edit::setText
+            )
+        binding.ok.setOnClickListener {
+            viewModel.changeContent(binding.edit.text.toString())
             viewModel.save()
             AndroidUtils.hideKeyboard(requireView())
             findNavController().navigateUp()
