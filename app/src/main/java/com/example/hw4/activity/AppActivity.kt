@@ -5,13 +5,14 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.example.hw4.R
-import com.example.hw4.util.StringArg
+import com.example.hw4.activity.NewPostFragment.Companion.textArg
+
 
 
 class AppActivity : AppCompatActivity(R.layout.activity_app) {
-    companion object {
-        var Bundle.textArg: String? by StringArg
-    }
+  //  companion object {
+  //      var Bundle.textArg: String? by StringArg
+  //  }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +23,9 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
 
 
             val text = it.getStringExtra(Intent.EXTRA_TEXT)
-            if (text?.isNotBlank() == true) {
+            if (text?.isNotBlank() != true) {
+                return@let
+            }
                 intent.removeExtra(Intent.EXTRA_TEXT)
                 findNavController(R.id.nav_host_fragment).navigate(
                     R.id.action_feedFragment_to_newPostFragment,
@@ -30,7 +33,6 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
                         textArg = text
                     }
                 )
-            }
         }
     }
 }

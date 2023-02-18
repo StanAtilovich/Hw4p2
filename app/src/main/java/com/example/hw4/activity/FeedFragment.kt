@@ -71,7 +71,6 @@ class FeedFragment : Fragment() {
             override fun onEdit(post: Post) {
                 binding.editGroup.visibility = View.VISIBLE
                 viewModel.edit(post)
-
             }
 
             @SuppressLint("QueryPermissionsNeeded")
@@ -105,6 +104,7 @@ class FeedFragment : Fragment() {
                 viewModel.save()
                 AndroidUtils.hideKeyboard(requireView())
                 findNavController().navigateUp()
+                binding.editGroup.visibility = View.INVISIBLE
             }
 
 
@@ -114,7 +114,7 @@ class FeedFragment : Fragment() {
                 setText("")
                 clearFocus()
                 AndroidUtils.hideKeyboard(this)
-                binding.editGroup.visibility = View.VISIBLE
+                binding.editGroup.visibility = View.INVISIBLE
             }
             return@setOnClickListener
         }

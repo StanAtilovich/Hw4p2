@@ -7,8 +7,11 @@ import com.example.hw4.DTO.Post
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class PostRepositoryFileImpl(private val context: Context):PostRepository {
-    private val gson = Gson()
+
+class PostRepositoryFileImpl(
+    private val context: Context,
+):PostRepository {
+    private val gson = Gson()//Gson()
     private val type = TypeToken.getParameterized(List::class.java, Post::class.java).type
     private val filename = "post.json"
     private var nextId = 1L

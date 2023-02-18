@@ -31,10 +31,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="294dp"
+        android:layout_marginBottom="50dp"
         app:layout_constraintBottom_toBottomOf="@+id/edit"
-        tools:ignore="BottomAppBar,MissingConstraints"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="BottomAppBar,MissingConstraints" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/ok"
@@ -42,11 +43,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="160dp"
         android:layout_marginEnd="160dp"
-        android:layout_marginBottom="328dp"
+        android:layout_marginBottom="84dp"
         android:contentDescription="@string/save"
         app:layout_constraintBottom_toBottomOf="@+id/edit"
         app:layout_constraintEnd_toEndOf="@+id/edit"
+        app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintStart_toStartOf="@+id/edit"
-        app:srcCompat="@drawable/ic_twotone_check_48"
-        />
+        app:srcCompat="@drawable/ic_twotone_check_48" />
 </androidx.constraintlayout.widget.ConstraintLayout>
