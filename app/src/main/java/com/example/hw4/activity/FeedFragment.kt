@@ -38,7 +38,9 @@ class FeedFragment : Fragment() {
             inflater,
             container, false
         )
-
+        //viewModel.navigateToOnePost.observe(this){
+        //    val direction = FeedFragment.toOnePostFragment
+        //}
         //   val viewModel: PostViewModel by viewModels()
         //   val newPostLauncher = registerForActivityResult(NewPostResultContract()) { result ->
         //       result ?: return@registerForActivityResult
@@ -69,8 +71,11 @@ class FeedFragment : Fragment() {
             }
 
             override fun onEdit(post: Post) {
-                binding.editGroup.visibility = View.VISIBLE
+                findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
                 viewModel.edit(post)
+                binding.editGroup.visibility = View.VISIBLE
+
+
             }
 
             @SuppressLint("QueryPermissionsNeeded")
@@ -99,13 +104,13 @@ class FeedFragment : Fragment() {
         }
 
 
-            binding.save.setOnClickListener {
-                viewModel.changeContent(binding.content.text.toString()) //(binding.edit.text.toString())
-                viewModel.save()
-                AndroidUtils.hideKeyboard(requireView())
-                findNavController().navigateUp()
-                binding.editGroup.visibility = View.INVISIBLE
-            }
+        binding.save.setOnClickListener {
+            viewModel.changeContent(binding.content.text.toString()) //(binding.edit.text.toString())
+            viewModel.save()
+            AndroidUtils.hideKeyboard(requireView())
+            findNavController().navigateUp()
+            binding.editGroup.visibility = View.INVISIBLE
+        }
 
 
         binding.deleted.setOnClickListener {
