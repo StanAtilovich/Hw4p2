@@ -11,10 +11,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-
 import com.example.hw4.util.AndroidUtils
 import com.example.hw4.DTO.Post
 import com.example.hw4.R
+import com.example.hw4.activity.NewPostFragment.Companion.textArg
 import com.example.hw4.adapter.OnInteractionListener
 import com.example.hw4.adapter.PostAdapter
 import com.example.hw4.databinding.FragmentFeedBinding
@@ -27,27 +27,28 @@ class FeedFragment : Fragment() {
         ownerProducer = ::requireParentFragment
     )
 
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        super.onCreate(savedInstanceState)
 
         val binding = FragmentFeedBinding.inflate(
             inflater,
             container, false
         )
-        //viewModel.navigateToOnePost.observe(this){
-        //    val direction = FeedFragment.toOnePostFragment
-        //}
-        //   val viewModel: PostViewModel by viewModels()
-        //   val newPostLauncher = registerForActivityResult(NewPostResultContract()) { result ->
-        //       result ?: return@registerForActivityResult
-        //       viewModel.changeContent(result)
-        //       viewModel.save()
-        //   }
-
+       // viewModel.navigateToOnePost.observe(this){
+       //     val direction = FeedFragment.toOnePostFragment
+       // }
+       //    val viewModel: PostViewModel by viewModels()
+       //    val newPostLauncher = registerForActivityResult(NewPostResultContract()) { result ->
+       //        result ?: return@registerForActivityResult
+       //        viewModel.changeContent(result)
+       //        viewModel.save()
+       //    }
+//
         val adapter = PostAdapter(object : OnInteractionListener {
             override fun onLike(post: Post) {
                 viewModel.likeById(post.id)
@@ -71,10 +72,10 @@ class FeedFragment : Fragment() {
             }
 
             override fun onEdit(post: Post) {
-                findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
-                viewModel.edit(post)
-                binding.editGroup.visibility = View.VISIBLE
-
+                findNavController().navigate(R.id.action_feedFragment_to_newPostFragment, Bundle().apply {
+                    textArg = post.content
+                } )
+               viewModel.edit(post)
 
             }
 
