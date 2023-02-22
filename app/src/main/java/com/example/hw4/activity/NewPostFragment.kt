@@ -9,12 +9,14 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.hw4.databinding.FragmentNewPostBinding
 import com.example.hw4.util.AndroidUtils
+import com.example.hw4.util.LongArg
 import com.example.hw4.util.StringArg
 import com.example.hw4.viewModel.PostViewModel
 
 class NewPostFragment : Fragment() {
     companion object {
         var Bundle.textArg: String? by StringArg
+        var Bundle.longArg: Long? by LongArg
     }
 
     private val viewModel: PostViewModel by viewModels(
@@ -31,10 +33,9 @@ class NewPostFragment : Fragment() {
             container,
             false
         )
-        arguments?.textArg
-            ?.let(
-                binding.edit::setText
-            )
+
+        arguments?.textArg?.let(binding.edit::setText)
+        binding.edit.requestFocus()
         binding.ok.setOnClickListener {
             viewModel.changeContent(binding.edit.text.toString())
             viewModel.save()
@@ -44,4 +45,5 @@ class NewPostFragment : Fragment() {
         }
         return binding.root
     }
+
 }

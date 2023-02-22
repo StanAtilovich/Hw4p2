@@ -23,31 +23,19 @@ import kotlinx.android.synthetic.main.card_post.*
 
 
 class FeedFragment : Fragment() {
-    private val viewModel: PostViewModel by viewModels(
-        ownerProducer = ::requireParentFragment
-    )
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         val binding = FragmentFeedBinding.inflate(
             inflater,
             container, false
         )
-       // viewModel.navigateToOnePost.observe(this){
-       //     val direction = FeedFragment.toOnePostFragment
-       // }
-       //    val viewModel: PostViewModel by viewModels()
-       //    val newPostLauncher = registerForActivityResult(NewPostResultContract()) { result ->
-       //        result ?: return@registerForActivityResult
-       //        viewModel.changeContent(result)
-       //        viewModel.save()
-       //    }
+        val viewModel: PostViewModel by viewModels(
+            ownerProducer = ::requireParentFragment
+        )
 //
         val adapter = PostAdapter(object : OnInteractionListener {
             override fun onLike(post: Post) {
@@ -65,6 +53,13 @@ class FeedFragment : Fragment() {
                 startActivity(shareIntent)
 
                 viewModel.sharing(post.id)
+            }
+
+            override fun onPostClick(post: Post) {
+                findNavController().navigate(R.id.action_feedFragment_to_onePostFragment, Bundle().apply {
+                    textArg = post.id.toString()
+                } )
+                viewModel.edit(post)
             }
 
             override fun onRemove(post: Post) {
@@ -106,7 +101,7 @@ class FeedFragment : Fragment() {
 
 
         binding.save.setOnClickListener {
-            viewModel.changeContent(binding.content.text.toString()) //(binding.edit.text.toString())
+            viewModel.changeContent(binding.content.text.toString())
             viewModel.save()
             AndroidUtils.hideKeyboard(requireView())
             findNavController().navigateUp()

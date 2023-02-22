@@ -10,9 +10,6 @@ import com.example.hw4.activity.NewPostFragment.Companion.textArg
 
 
 class AppActivity : AppCompatActivity(R.layout.activity_app) {
-  //  companion object {
-  //      var Bundle.textArg: String? by StringArg
-  //  }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

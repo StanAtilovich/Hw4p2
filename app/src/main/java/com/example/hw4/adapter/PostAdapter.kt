@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.hw4.DTO.Post
 import com.example.hw4.R
 import com.example.hw4.databinding.CardPostBinding
+import kotlinx.android.synthetic.main.card_post.view.*
+
 
 interface OnInteractionListener {
     fun onLike(post: Post) {}
@@ -19,6 +21,7 @@ interface OnInteractionListener {
     fun onRemove(post: Post) {}
     fun onEdit(post: Post) {}
     fun onplayVideo(post: Post) {}
+    fun onPostClick(post: Post) {}
 }
 
 class PostAdapter(
@@ -82,13 +85,14 @@ class PostViewHolder(
             likes.setOnClickListener {
                 onInteractionListener.onLike(post)
             }
-            //textLikes.text = post.likCount.toString()
-
             shares.setOnClickListener {
                 onInteractionListener.onShare(post)
             }
             videoPlay.setOnClickListener {
                 onInteractionListener.onplayVideo(post)
+            }
+            binding.root.setOnClickListener{
+                onInteractionListener.onPostClick(post)
             }
 
         }
