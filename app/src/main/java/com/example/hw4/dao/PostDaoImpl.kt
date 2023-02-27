@@ -6,9 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import com.example.hw4.DTO.Post
 
 
-class PostDaoImpl(
-    private val db: SQLiteDatabase
-) : PostDao {
+class PostDaoImpl(private val db: SQLiteDatabase) : PostDao {
     companion object {
         val DDL = """
         CREATE TABLE ${PostColumns.TABLE} (
@@ -102,7 +100,7 @@ class PostDaoImpl(
         }
     }
 
-    override fun likeById(id: Long) {
+    override fun likeById(id: Long) : Post {
         db.execSQL(
             """
            UPDATE posts SET
@@ -111,17 +109,19 @@ class PostDaoImpl(
            WHERE id = ?;
         """.trimIndent(), arrayOf(id)
         )
+        return getPostById(id)
     }
 
-    override fun removeById(id: Long) {
+    override fun removeById(id: Long) : List<Post> {
         db.delete(
             PostColumns.TABLE,
             "${PostColumns.COLUMN_ID} = ?",
             arrayOf(id.toString())
         )
+        return getAll()
     }
 
-    override fun shareById(id: Long) {
+    override fun shareById(id: Long) : Post {
         db.execSQL(
             """
                 UPDATE posts SET
@@ -129,6 +129,21 @@ class PostDaoImpl(
                 WHERE id = ?;
                 """.trimIndent(), arrayOf(id)
         )
+        return getPostById(id)
+    }
+    private fun getPostById(id: Long): Post {
+        db.query(
+            PostColumns.TABLE,
+            PostColumns.ALL_COLUMNS,
+            "${PostColumns.COLUMN_ID} = ?",
+            arrayOf(id.toString()),
+            null,
+            null,
+            null
+        ).use {
+            it.moveToNext()
+            return map(it)
+        }
     }
 
     private fun map(cursor: Cursor): Post {

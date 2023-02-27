@@ -10,7 +10,4 @@ interface PostRepository {
     fun sharing(id: Long)
     fun removeById(id: Long)
     fun save(post: Post)
-
-
-
 }

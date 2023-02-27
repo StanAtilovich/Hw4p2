@@ -55,8 +55,6 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     fun likeById(id: Long) = repository.likedById(id)
     fun sharing(id: Long) = repository.sharing(id)
     fun removeById(id: Long) = repository.removeById(id)
-
-
 }
 
 
