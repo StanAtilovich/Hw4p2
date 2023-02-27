@@ -1,10 +1,12 @@
 package com.example.hw4.viewModel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.hw4.DTO.Post
+import com.example.hw4.db.AppDb
 import com.example.hw4.repository.PostRepository
-import com.example.hw4.repository.PostRepositoryInMemoryImpl
+import com.example.hw4.repository.PostRepositorySQLiteImpl
 
 private val empty = Post(
     id = 0,
@@ -20,9 +22,11 @@ private val empty = Post(
     video = null
 )
 
-class PostViewModel : ViewModel() {
-    private val repository: PostRepository = PostRepositoryInMemoryImpl()
-    val data = repository.get()
+class PostViewModel(application: Application) : AndroidViewModel(application) {
+    private val repository: PostRepository = PostRepositorySQLiteImpl(
+        AppDb.getInstance(application).postDao
+    )
+    val data = repository.getAll()
     val edited = MutableLiveData(empty)
 
     fun save() {

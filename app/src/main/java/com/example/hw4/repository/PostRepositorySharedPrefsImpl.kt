@@ -24,7 +24,7 @@ class PostRepositorySharedPrefsImpl(context: Context,) : PostRepository {
         }
     }
 
-    override fun get(): LiveData<List<Post>> = data
+    override fun getAll(): LiveData<List<Post>> = data
 
     override fun likedById(id: Long) {
         posts = posts.map {

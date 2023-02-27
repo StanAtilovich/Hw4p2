@@ -11,7 +11,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.hw4.DTO.Post
 import com.example.hw4.R
-import com.example.hw4.activity.NewPostFragment.Companion.longArg
 import com.example.hw4.activity.NewPostFragment.Companion.textArg
 import com.example.hw4.adapter.OnInteractionListener
 import com.example.hw4.adapter.PostViewHolder
@@ -63,14 +62,6 @@ class OnePostFragment : Fragment() {
                 viewModel.sharing(post.id)
             }
 
-            override fun onPostClick(post: Post) {
-                findNavController().navigate(
-                    R.id.action_feedFragment_to_onePostFragment,
-                    Bundle().apply {
-                        longArg = post.id
-                    })
-                viewModel.edit(post)
-            }
 
             override fun onRemove(post: Post) {
                 viewModel.removeById(post.id)
