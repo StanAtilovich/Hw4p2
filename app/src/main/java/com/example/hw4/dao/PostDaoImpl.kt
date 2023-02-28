@@ -15,39 +15,44 @@ class PostDaoImpl(private val db: SQLiteDatabase) : PostDao {
             ${PostColumns.COLUMN_CONTENT} TEXT NOT NULL,
             ${PostColumns.COLUMN_PUBLISHED} TEXT NOT NULL,
             ${PostColumns.COLUMN_LIKED_BY_ME} BOOLEAN NOT NULL DEFAULT 0,            
-            ${PostColumns.COLUMN_LIKES} INTEGER NOT NULL DEFAULT 0,
-            ${PostColumns.COLUMN_REPOST} INTEGER NOT NULL DEFAULT 0,
-            ${PostColumns.COLUMN_VIEWS} INTEGER NOT NULL DEFAULT 0,
-            ${PostColumns.COLUMN_VIDEO} TEXT NOT NULL
+            ${PostColumns.COLUMN_LIK_COUNT} INTEGER NOT NULL DEFAULT 0,
+            ${PostColumns.COLUMN_SHARE_BY_ME} BOOLEAN NOT NULL DEFAULT 0,
+            ${PostColumns.COLUMN_SHARE_COUNT} INTEGER NOT NULL DEFAULT 0,
+            ${PostColumns.COLUMN_VIEW_BY_ME} BOOLEAN NOT NULL DEFAULT 0,
+            ${PostColumns.COLUMN_COUNT_VIEW} INTEGER NOT NULL DEFAULT 0,
+            ${PostColumns.COLUMN_VIDEO} TEXT
         );
         """.trimIndent()
     }
 
+
     object PostColumns {
-        const val COLUMN_VIEWS = "views"
-        const val COLUMN_REPOST = "repost"
-        const val COLUMN_SHARE_BY_ME = "share"
-        const val COLUMN_SHARE = "share"
-        const val COLUMN_VIEW_BY_ME = "view by me"
-        const val COLUMN_COUNT_VIEW = "count view"
-        const val COLUMN_VIDEO = "video"
         const val TABLE = "posts"
         const val COLUMN_ID = "id"
         const val COLUMN_AUTHOR = "author"
         const val COLUMN_CONTENT = "content"
         const val COLUMN_PUBLISHED = "published"
         const val COLUMN_LIKED_BY_ME = "likedByMe"
-        const val COLUMN_LIKES = "likes"
+        const val COLUMN_LIK_COUNT = "likCount"
+        const val COLUMN_SHARE_BY_ME = "shareByMe"
+        const val COLUMN_SHARE_COUNT = "shareCount"
+        const val COLUMN_VIEW_BY_ME = "viewByMe"
+        const val COLUMN_COUNT_VIEW = "countView"
+        const val COLUMN_VIDEO = "video"
+
+
         val ALL_COLUMNS = arrayOf(
             COLUMN_ID,
             COLUMN_AUTHOR,
             COLUMN_CONTENT,
             COLUMN_PUBLISHED,
             COLUMN_LIKED_BY_ME,
-            COLUMN_LIKES,
-            COLUMN_REPOST,
-            COLUMN_VIEWS,
-            COLUMN_VIDEO
+            COLUMN_VIDEO,
+            COLUMN_LIK_COUNT,
+            COLUMN_SHARE_BY_ME,
+            COLUMN_SHARE_COUNT,
+            COLUMN_VIEW_BY_ME,
+            COLUMN_COUNT_VIEW
         )
     }
 
@@ -154,9 +159,9 @@ class PostDaoImpl(private val db: SQLiteDatabase) : PostDao {
                 content = getString(getColumnIndexOrThrow(PostColumns.COLUMN_CONTENT)),
                 published = getString(getColumnIndexOrThrow(PostColumns.COLUMN_PUBLISHED)),
                 likedByMe = getInt(getColumnIndexOrThrow(PostColumns.COLUMN_LIKED_BY_ME)) != 0,
-                likCount = getInt(getColumnIndexOrThrow(PostColumns.COLUMN_LIKES)),
+                likCount = getInt(getColumnIndexOrThrow(PostColumns.COLUMN_LIK_COUNT)),
                 shareByMe = getInt(getColumnIndexOrThrow(PostColumns.COLUMN_SHARE_BY_ME)) != 0,
-                shareCount = getInt(getColumnIndexOrThrow(PostColumns.COLUMN_SHARE)),
+                shareCount = getInt(getColumnIndexOrThrow(PostColumns.COLUMN_SHARE_COUNT)),
                 viewByMe = getInt(getColumnIndexOrThrow(PostColumns.COLUMN_VIEW_BY_ME)) != 0,
                 countView = getInt(getColumnIndexOrThrow(PostColumns.COLUMN_COUNT_VIEW)),
                 video = getString(getColumnIndexOrThrow(PostColumns.COLUMN_VIDEO))

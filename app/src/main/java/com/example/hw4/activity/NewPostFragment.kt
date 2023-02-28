@@ -9,14 +9,12 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.hw4.databinding.FragmentNewPostBinding
 import com.example.hw4.util.AndroidUtils
-import com.example.hw4.util.LongArg
 import com.example.hw4.util.StringArg
 import com.example.hw4.viewModel.PostViewModel
 
 class NewPostFragment : Fragment() {
     companion object {
         var Bundle.textArg: String? by StringArg
-        var Bundle.longArg: Long? by LongArg
     }
 
     private val viewModel: PostViewModel by viewModels(

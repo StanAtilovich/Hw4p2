@@ -23,16 +23,16 @@ class AppDb private constructor(db: SQLiteDatabase) {
         }
 
         private fun buildDatabase(context: Context, DDLs: Array<String>) = DbHelper(
-            context, 1, "app.db", DDLs
+            context, 1, "app.db6", DDLs
         ).writableDatabase
     }
 }
 
 class DbHelper(context: Context, dbVersion: Int, dbName: String, private val DDLs: Array<String>) :
     SQLiteOpenHelper(context, dbName, null, dbVersion) {
-    override fun onCreate(db: SQLiteDatabase?) {
+    override fun onCreate(db: SQLiteDatabase) {
         DDLs.forEach {
-            db?.execSQL(it)
+            db.execSQL(it)
         }
     }
 
