@@ -7,13 +7,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import com.example.hw4.entity.PostEntity
 
-//interface PostDao {
-//    fun getAll(): List<Post>
-//    fun save(post: Post): Post
-//    fun likeById(id: Long) : Post
-//    fun removeById(id: Long) : List<Post>
-//    fun shareById(id: Long) : Post
-//}
+
 @Dao
 interface PostDao {
     @Query("SELECT * FROM PostEntity ORDER BY id DESC")
@@ -30,7 +24,7 @@ interface PostDao {
 
     @Query("""
         UPDATE PostEntity SET
-        likes = likes + CASE WHEN likedByMe THEN -1 ELSE 1 END,
+        likCount = likCount + CASE WHEN likedByMe THEN -1 ELSE 1 END,
         likedByMe = CASE WHEN likedByMe THEN 0 ELSE 1 END
         WHERE id = :id
         """)
@@ -38,5 +32,10 @@ interface PostDao {
 
     @Query("DELETE FROM PostEntity WHERE id = :id")
     fun removeById(id: Long)
+
+    @Query("""UPDATE PostEntity SET
+                    shareCount = shareCount + 1
+                    WHERE id =:id""")
     fun sharing(id: Long)
+
 }
