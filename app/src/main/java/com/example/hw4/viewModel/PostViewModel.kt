@@ -6,7 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import com.example.hw4.DTO.Post
 import com.example.hw4.db.AppDb
 import com.example.hw4.repository.PostRepository
-import com.example.hw4.repository.PostRepositorySQLiteImpl
+import com.example.hw4.repository.PostRepositoryImpl
+
 
 private val empty = Post(
     id = 0,
@@ -23,8 +24,8 @@ private val empty = Post(
 )
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: PostRepository = PostRepositorySQLiteImpl(
-        AppDb.getInstance(application).postDao
+    private val repository: PostRepository = PostRepositoryImpl(//PostRepositorySQLiteImpl(
+        AppDb.getInstance(context = application).postDao()
     )
     val data = repository.getAll()
     val edited = MutableLiveData(empty)
