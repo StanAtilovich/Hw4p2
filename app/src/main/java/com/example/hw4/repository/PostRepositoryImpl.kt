@@ -7,7 +7,6 @@ import com.example.hw4.entity.PostEntity
 
 class PostRepositoryImpl (
     private val dao: PostDao,
-
 ) : PostRepository {
     override fun getAll() = Transformations.map(dao.getAll()) { list ->
         list.map {
