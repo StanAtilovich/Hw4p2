@@ -81,7 +81,6 @@ class FCMService : FirebaseMessagingService() {
             .build()
 
         NotificationManagerCompat.from(this).notify(Random.nextInt(100_000), notification)
-
     }
 
     override fun onNewToken(token: String) {
