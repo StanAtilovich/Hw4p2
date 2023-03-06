@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "608874204102",
+    "project_id": "netology-e88aa",
+    "storage_bucket": "netology-e88aa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:608874204102:android:1b03e834f33077c7b3c0c7",
+        "android_client_info": {
+          "package_name": "com.example.hw4"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "608874204102-pbdtk7nb5ha8ivjp448dfe1hq07vq5l0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFodcdrDkeO_YIicCBvACKLaCQHpm0sbQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "608874204102-pbdtk7nb5ha8ivjp448dfe1hq07vq5l0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

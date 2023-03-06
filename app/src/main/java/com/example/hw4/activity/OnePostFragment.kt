@@ -16,7 +16,7 @@ import com.example.hw4.adapter.OnInteractionListener
 import com.example.hw4.adapter.PostViewHolder
 import com.example.hw4.databinding.FragmentOnePostBinding
 import com.example.hw4.viewModel.PostViewModel
-import kotlinx.android.synthetic.main.fragment_feed.*
+
 
 
 class OnePostFragment : Fragment() {

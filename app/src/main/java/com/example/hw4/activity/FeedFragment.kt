@@ -19,7 +19,7 @@ import com.example.hw4.adapter.OnInteractionListener
 import com.example.hw4.adapter.PostAdapter
 import com.example.hw4.databinding.FragmentFeedBinding
 import com.example.hw4.viewModel.PostViewModel
-import kotlinx.android.synthetic.main.card_post.*
+
 
 
 class FeedFragment : Fragment() {

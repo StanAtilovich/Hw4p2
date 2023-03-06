@@ -18,8 +18,11 @@
     <string name="text_intent_handler">Здесь будет текст\n поста </string>
     <string name="add_post">Добавить пост</string>
     <string name="save">Сохранить</string>
+    <string name="google_play_unavailable">Google Api Недоступно</string>
     <string name="error_no_activity_to_open_media">Должно быть видео</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="channel_remote_name">Server notifications</string>
+    <string name="channel_remote_description">Notifications from remote server</string>
+    <string name="notification_user_liked">User %1$s liked %2$s\'s post</string>
 
 </resources>

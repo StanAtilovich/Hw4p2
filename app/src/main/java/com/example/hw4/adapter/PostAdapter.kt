@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.hw4.DTO.Post
 import com.example.hw4.R
 import com.example.hw4.databinding.CardPostBinding
-import kotlinx.android.synthetic.main.card_post.view.*
+
 
 
 interface OnInteractionListener {
