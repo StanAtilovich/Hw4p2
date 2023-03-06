@@ -29,25 +29,58 @@ class FCMService : FirebaseMessagingService() {
             }
             val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             manager.createNotificationChannel(channel)
-        }}
+        }
+    }
 
 
     override fun onMessageReceived(message: RemoteMessage) {
         println(Gson().toJson(message))
         message.data["action"]?.let {
-when(Action.valueOf(it)){
-    Action.LIKE -> handleLike(Gson().fromJson(message.data["content"], Like::class.java))
-}
+            when (Action.valueOf(it)) {
+                Action.LIKE -> handleLike(
+                    Gson().fromJson(
+                        message.data["content"],
+                        Like::class.java
+                    )
+                )
+                Action.POST -> handlePost(
+                    gson.fromJson(message.data[content], FCMPost::class.java)
+                )
+            }
         }
     }
 
-    private fun handleLike(like: Like) {
-        val notification = NotificationCompat.Builder(this,channelId)
+    private fun handlePost(content: FCMPost?) {
+        val notification = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle(getString(R.string.notification_user_liked, like.userName, like.postAuthor))
+            .setContentTitle(
+                getString(R.string.notification_user_posted, content?.author)
+            )
+            .setContentText(content?.content)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setStyle(
+                NotificationCompat.BigTextStyle()
+                    .bigText(content?.content)
+            )
             .build()
 
-        NotificationManagerCompat.from(this).notify(Random.nextInt(100_000),notification)
+        NotificationManagerCompat.from(this)
+            .notify(Random.nextInt(100_000), notification)
+    }
+
+    private fun handleLike(like: Like) {
+        val notification = NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setContentTitle(
+                getString(
+                    R.string.notification_user_liked,
+                    like.userName,
+                    like.postAuthor
+                )
+            )
+            .build()
+
+        NotificationManagerCompat.from(this).notify(Random.nextInt(100_000), notification)
 
     }
 
@@ -56,13 +89,21 @@ when(Action.valueOf(it)){
     }
 }
 
-enum class Action{
-    LIKE
+data class FCMPost(
+    val id: Long,
+    val author: String,
+    val content: String,
+)
+
+enum class Action {
+    LIKE,
+    POST
 }
 
 data class Like(
-val userId: Int,
-val userName: String,
-val postId: Int,
-val postAuthor: String,
+    val userId: Int,
+    val userName: String,
+    val postId: Int,
+    val postAuthor: String,
 )
+
