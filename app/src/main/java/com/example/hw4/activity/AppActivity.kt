@@ -37,6 +37,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
         }
         checkGoogleApiAvailability()
     }
+
     private fun checkGoogleApiAvailability(){
         with(GoogleApiAvailability.getInstance()){
             val code = isGooglePlayServicesAvailable(this@AppActivity)
