@@ -35,20 +35,34 @@ class FCMService : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
         println(Gson().toJson(message))
-        message.data["action"]?.let {
-            when (Action.valueOf(it)) {
-                Action.LIKE -> handleLike(
-                    Gson().fromJson(
-                        message.data["content"],
-                        Like::class.java
+        try {
+            message.data[action]?.let {
+                when (Action.valueOf(it)) {
+                    Action.LIKE -> handleLike(
+                        Gson().fromJson(
+                            message.data["content"],
+                            Like::class.java
+                        )
                     )
-                )
-                Action.POST -> handlePost(
-                    gson.fromJson(message.data[content], FCMPost::class.java)
-                )
+                    Action.POST -> handlePost(
+                        gson.fromJson(message.data[content], FCMPost::class.java)
+                    )
+                }
             }
+
+        }// catch (e: IllegalArgumentException) {
+         //   val notification = NotificationCompat.Builder(this, channelId)
+            //       .setSmallIcon(R.drawable.ic_notification)
+            //       .setContentTitle(getString(R.string.not_nown_action_notification))
+            //       .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            //       .build()
+            //   NotificationManagerCompat.from(this).notify(Random.nextInt(100000), notification)
+        catch (e: RuntimeException) {
+            println(R.string.not_nown_action_notification)
+            return
         }
     }
+
 
     private fun handlePost(content: FCMPost?) {
         val notification = NotificationCompat.Builder(this, channelId)
