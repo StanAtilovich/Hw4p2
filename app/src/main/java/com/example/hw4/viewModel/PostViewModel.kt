@@ -42,9 +42,24 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         loadPosts()
     }
 
-    fun loadPosts() {
+    fun refreshPosts() {
         thread {
-            _data.postValue(FeedModel(loading = true))
+            // Начинаем загрузку
+            _data.postValue(FeedModel(refreshing = true))
+            try {
+                // Данные успешно получены
+                val posts = repository.getAll()
+                FeedModel(posts = posts, empty = posts.isEmpty())
+            } catch (e: IOException) {
+                // Получена ошибка
+                FeedModel(error = true)
+            }.also(_data::postValue)
+        }
+    }
+
+    private fun reload(isInitial: Boolean) {
+        thread {
+            _data.postValue(FeedModel(loading = isInitial, refreshing = !isInitial))
             try {
                 val posts = repository.getAll()
                 FeedModel(posts = posts, empty = posts.isEmpty())
@@ -53,6 +68,10 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             }.also(_data::postValue)
         }
     }
+    fun loadPosts(){
+        reload(true)
+    }
+
 
     fun save() {
         edited.value?.let {
@@ -88,7 +107,6 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     fun removeById(id: Long) {
         thread {
-            // Оптимистичная модель
             val old = _data.value?.posts.orEmpty()
             _data.postValue(
                 _data.value?.copy(posts = _data.value?.posts.orEmpty()

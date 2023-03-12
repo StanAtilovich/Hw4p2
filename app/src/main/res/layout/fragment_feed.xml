@@ -41,6 +41,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
+
     <androidx.constraintlayout.widget.Group
         android:id="@+id/errorGroup"
         android:layout_width="wrap_content"
@@ -58,6 +60,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/post"
         android:layout_width="match_parent"
@@ -70,7 +81,7 @@
         tools:itemCount="9"
         tools:layout_editor_absoluteX="16dp"
         tools:listitem="@layout/card_post" />
-
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/toolsTop"
         android:layout_width="wrap_content"
@@ -126,6 +137,9 @@
         app:constraint_referenced_ids="content,save,deleted"
         android:visibility="gone"/>
 
+
+
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -136,9 +150,11 @@
         android:contentDescription="@string/add_post"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/post"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.938"
         app:srcCompat="@drawable/ic_baseline_add_24" />
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.example.hw4.util.AndroidUtils
 import com.example.hw4.DTO.Post
 import com.example.hw4.R
@@ -91,6 +92,7 @@ class FeedFragment : Fragment() {
             binding.progress.isVisible = state.loading
             binding.errorGroup.isVisible = state.error
             binding.emptyText.isVisible = state.empty
+            binding.swipeRefreshLayout.isRefreshing = state.refreshing
             }
         binding.retryButton.setOnClickListener{
             viewModel.loadPosts()
@@ -131,6 +133,14 @@ class FeedFragment : Fragment() {
         binding.fab.setOnClickListener {
             findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
         }
+        with(binding.swipeRefreshLayout) {
+            setOnRefreshListener {
+                viewModel.refreshPosts()
+            }
+
+            setSize(CircularProgressDrawable.LARGE)
+        }
+
         return binding.root
 
     }
