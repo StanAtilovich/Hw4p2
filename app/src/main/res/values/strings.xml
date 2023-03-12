@@ -26,5 +26,8 @@
     <string name="notification_user_liked">User %1$s liked %2$s\'s post</string>
     <string name="notification_user_posted">User %1$s posted new post</string>
     <string name="not_nown_action_notification">уведомление о неизвестном действии!</string>
+    <string name="error_loading">Что-то пошло не так. Попробуйте позднее</string>
+    <string name="retry_loading">Повторить</string>
+    <string name="empty_posts">Постов нет.\nЕсли создадите новый пост, то он появится здесь</string>
 
 </resources>
