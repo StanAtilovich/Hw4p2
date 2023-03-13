@@ -44,14 +44,11 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     fun refreshPosts() {
         thread {
-            // Начинаем загрузку
             _data.postValue(FeedModel(refreshing = true))
             try {
-                // Данные успешно получены
                 val posts = repository.getAll()
                 FeedModel(posts = posts, empty = posts.isEmpty())
             } catch (e: IOException) {
-                // Получена ошибка
                 FeedModel(error = true)
             }.also(_data::postValue)
         }
@@ -68,7 +65,8 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             }.also(_data::postValue)
         }
     }
-    fun loadPosts(){
+
+    fun loadPosts() {
         reload(true)
     }
 
@@ -100,9 +98,50 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-    fun sharing(id: Long) = repository.sharing(id)
+    fun sharing(id: Long) {
+        thread {
+            val old = _data.value?.posts.orEmpty()
+            _data.run {
+                postValue(
+                    value?.copy(
+                        posts = value?.posts.orEmpty().map {
+                            if (it.id != id) it else it.copy(shareCount = it.shareCount + 1)
+                        }
+                    ))
+                try {
+                    repository.sharing(id)
+                } catch (e: IOException) {
+                    _data.postValue(_data.value?.copy(posts = old))
+                }
+            }
+        }
+    }
+
     fun likeById(id: Long) {
-        thread { repository.likedById(id) }
+        thread {
+            val old = _data.value?.posts.orEmpty()
+            _data.postValue(
+                _data.value?.copy(posts = _data.value?.posts.orEmpty().map {
+                    if (it.id == id) {
+                        it.copy(
+                            likedByMe = !it.likedByMe, likCount = if (it.likedByMe) {
+                                it.likCount - 1
+                            } else {
+                                it.likCount + 1
+                            }
+                        )
+                    } else {
+                        it
+                    }
+                }
+                )
+            )
+            try {
+                repository.likedById(id)
+            } catch (e: IOException) {
+                _data.postValue(_data.value?.copy(posts = old))
+            }
+        }
     }
 
     fun removeById(id: Long) {
@@ -121,9 +160,3 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 }
-
-
-
-
-
-

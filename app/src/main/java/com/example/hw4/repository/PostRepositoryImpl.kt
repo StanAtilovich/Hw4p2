@@ -8,6 +8,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.internal.EMPTY_REQUEST
 import java.util.concurrent.TimeUnit
 
 class PostRepositoryImpl : PostRepository {
@@ -35,26 +36,49 @@ class PostRepositoryImpl : PostRepository {
     }
 
 
-   override fun sharing(id: Long) {
-       val request: Request = Request.Builder()
-           .post(gson.toJson(id).toRequestBody(jsonType))
-           .url("${BASE_URL}/api/posts/$id/sharing")
-           .build()
-
-       client.newCall(request)
-           .execute()
-           .close()
-   }
-
-    override fun likedById(id: Long) {
+    override fun sharing(id: Long) {
         val request: Request = Request.Builder()
             .post(gson.toJson(id).toRequestBody(jsonType))
-            .url("${BASE_URL}/api/posts/$id/likes")
+            .url("${BASE_URL}/api/slow/posts/$id/sharing")
             .build()
 
         client.newCall(request)
             .execute()
             .close()
+    }
+
+
+
+    override fun likedById(id: Long) {
+        var request: Request = Request.Builder()
+            .url("${BASE_URL}/api/slow/posts/$id")
+            .build()
+
+        val post: Post = client.newCall(request)
+            .execute()
+            .let { it.body?.string() ?: throw RuntimeException("body is null") }
+            .let {
+                gson.fromJson(it, typeToken.type)
+            }
+
+        request = if (!post.likedByMe) {
+            Request.Builder()
+                .url("${BASE_URL}/api/slow/posts/$id/likes")
+                .post(EMPTY_REQUEST)
+                .build()
+        } else {
+            Request.Builder()
+                .url("${BASE_URL}/api/slow/posts/$id/likes")
+                .delete()
+                .build()
+        }
+
+        return client.newCall(request)
+            .execute()
+            .let { it.body?.string() ?: throw RuntimeException("body is null") }
+            .let {
+                gson.fromJson(it, typeToken.type)
+            }
     }
 
     override fun save(post: Post) {

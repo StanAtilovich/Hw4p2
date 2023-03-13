@@ -1,6 +1,7 @@
 package com.example.hw4.activity
 
 import android.os.Bundle
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import com.example.hw4.databinding.FragmentNewPostBinding
 import com.example.hw4.util.AndroidUtils
 import com.example.hw4.util.StringArg
 import com.example.hw4.viewModel.PostViewModel
+
 
 class NewPostFragment : Fragment() {
     companion object {
@@ -39,6 +41,9 @@ class NewPostFragment : Fragment() {
             viewModel.changeContent(binding.edit.text.toString())
             viewModel.save()
             AndroidUtils.hideKeyboard(requireView())
+            binding.ok.visibility = View.INVISIBLE
+            binding.bottomAppBar.visibility = View.INVISIBLE
+
         }
         viewModel.postCreated.observe(viewLifecycleOwner) {
             viewModel.loadPosts()
