@@ -46,38 +46,61 @@ class PostRepositoryImpl : PostRepository {
             .execute()
             .close()
     }
+  // override fun likedById(id: Long) {
+  //     var request: Request = Request.Builder()
+  //         .url("${BASE_URL}/api/slow/posts/$id")
+  //         .build()
 
+  //     val post: Post = client.newCall(request)
+  //         .execute()
+  //         .let { it.body?.string() ?: throw RuntimeException("body is null") }
+  //         .let {
+  //             gson.fromJson(it, typeToken.type)
+  //         }
 
+  //     request = if (!post.likedByMe) {
+  //         Request.Builder()
+  //             .url("${BASE_URL}/api/slow/posts/$id/likes")
+  //             .post(EMPTY_REQUEST)
+  //             .build()
+  //     } else {
+  //         Request.Builder()
+  //             .url("${BASE_URL}/api/slow/posts/$id/likes")
+  //             .delete()
+  //             .build()
+  //     }
 
-    override fun likedById(id: Long) {
-        var request: Request = Request.Builder()
-            .url("${BASE_URL}/api/slow/posts/$id")
+  //     return client.newCall(request)
+  //         .execute()
+  //         .let { it.body?.string() ?: throw RuntimeException("body is null") }
+  //         .let {
+  //             gson.fromJson(it, typeToken.type)
+  //         }
+  // }
+  override fun likedById(id: Long):Post {
+      val request: Request = Request.Builder()
+          .url("${BASE_URL}/api/slow/posts/${id}/likes")
+          .post(EMPTY_REQUEST)
+          .build()
+
+     return client.newCall(request)
+          .execute()
+          .let { it.body?.string() ?: throw RuntimeException("body is null") }
+          .let { gson.fromJson(it, Post::class.java)
+          }
+  }
+    override fun unlikedById(id: Long):Post {
+        val request: Request = Request.Builder()
+            .url("${BASE_URL}/api/slow/posts/${id}/likes")
+            .delete()
             .build()
 
-        val post: Post = client.newCall(request)
+        client.newCall(request)
             .execute()
-            .let { it.body?.string() ?: throw RuntimeException("body is null") }
-            .let {
-                gson.fromJson(it, typeToken.type)
-            }
-
-        request = if (!post.likedByMe) {
-            Request.Builder()
-                .url("${BASE_URL}/api/slow/posts/$id/likes")
-                .post(EMPTY_REQUEST)
-                .build()
-        } else {
-            Request.Builder()
-                .url("${BASE_URL}/api/slow/posts/$id/likes")
-                .delete()
-                .build()
-        }
-
         return client.newCall(request)
             .execute()
             .let { it.body?.string() ?: throw RuntimeException("body is null") }
-            .let {
-                gson.fromJson(it, typeToken.type)
+            .let { gson.fromJson(it, Post::class.java)
             }
     }
 

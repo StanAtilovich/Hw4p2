@@ -23,7 +23,6 @@ import com.example.hw4.databinding.FragmentFeedBinding
 import com.example.hw4.viewModel.PostViewModel
 
 
-
 class FeedFragment : Fragment() {
 
     override fun onCreateView(
@@ -41,7 +40,11 @@ class FeedFragment : Fragment() {
 
         val adapter = PostAdapter(object : OnInteractionListener {
             override fun onLike(post: Post) {
-                viewModel.likeById(post.id)
+                if (post.likedByMe) {
+                    viewModel.unlikeById(post.id)
+                } else {
+                    viewModel.likeById(post.id)
+                }
             }
 
             override fun onShare(post: Post) {
@@ -58,9 +61,11 @@ class FeedFragment : Fragment() {
             }
 
             override fun onPostClick(post: Post) {
-                findNavController().navigate(R.id.action_feedFragment_to_onePostFragment, Bundle().apply {
-                    textArg = post.id.toString()
-                } )
+                findNavController().navigate(
+                    R.id.action_feedFragment_to_onePostFragment,
+                    Bundle().apply {
+                        textArg = post.id.toString()
+                    })
                 viewModel.edit(post)
             }
 
@@ -69,10 +74,12 @@ class FeedFragment : Fragment() {
             }
 
             override fun onEdit(post: Post) {
-                findNavController().navigate(R.id.action_feedFragment_to_newPostFragment, Bundle().apply {
-                    textArg = post.content
-                } )
-               viewModel.edit(post)
+                findNavController().navigate(
+                    R.id.action_feedFragment_to_newPostFragment,
+                    Bundle().apply {
+                        textArg = post.content
+                    })
+                viewModel.edit(post)
 
             }
 
@@ -93,8 +100,8 @@ class FeedFragment : Fragment() {
             binding.errorGroup.isVisible = state.error
             binding.emptyText.isVisible = state.empty
             binding.swipeRefreshLayout.isRefreshing = state.refreshing
-            }
-        binding.retryButton.setOnClickListener{
+        }
+        binding.retryButton.setOnClickListener {
             viewModel.loadPosts()
         }
 
