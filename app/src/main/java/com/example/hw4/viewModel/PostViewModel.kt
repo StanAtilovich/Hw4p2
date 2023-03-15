@@ -19,7 +19,7 @@ private val empty = Post(
     author = "",
     likedByMe = false,
     published = "",
-    likCount = 0,
+    likes = 0,
     shareByMe = false,
     shareCount = 0,
     viewByMe = false,
@@ -97,6 +97,38 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         edited.value = empty
     }
 
+    fun likeById(id: Long) {
+        thread {
+            val post = repository.likedById(id)
+            _data.postValue(
+                _data.value?.copy(posts = _data.value?.posts.orEmpty().map {
+                    if (it.id == id) {
+                        post
+                    } else {
+                        it
+                    }
+
+                })
+            )
+        }
+    }
+
+
+    fun unlikeById(id: Long) {
+        thread {
+            val post = repository.unlikedById(id)
+            _data.postValue(_data.value?.copy(posts = _data.value?.posts.orEmpty().map {
+                if (it.id == id) {
+                    post
+                } else {
+                    it
+                }
+            }
+            )
+            )
+        }
+    }
+
 
     fun sharing(id: Long) {
         thread {
@@ -116,58 +148,6 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
-
-    fun likeById(id: Long) {
-        thread {
-            val post = repository.likedById(id)
-            _data.postValue(
-                _data.value?.copy(posts = _data.value?.posts.orEmpty().map {
-                if (it.id == id) {
-                    post
-                } else {
-                    it
-                }
-            }))
-        }
-    }
-
-    fun unlikeById(id: Long) {
-        thread {
-            val post=repository.unlikedById(id)
-            _data.postValue(_data.value?.copy(posts = _data.value?.posts.orEmpty().map {
-                if (it.id == id) {
-                    post
-                } else {
-                    it
-                }
-            }))}
-    }
-    //   fun likeById(id: Long) {
-    //       thread {
-    //           val old = _data.value?.posts.orEmpty()
-    //           _data.postValue(
-    //               _data.value?.copy(posts = _data.value?.posts.orEmpty().map {
-    //                   if (it.id == id) {
-    //                       it.copy(
-    //                           likedByMe = !it.likedByMe, likCount = if (it.likedByMe) {
-    //                               it.likCount - 1
-    //                           } else {
-    //                               it.likCount + 1
-    //                           }
-    //                       )
-    //                   } else {
-    //                       it
-    //                   }
-    //               }
-    //               )
-    //           )
-    //           try {
-    //               repository.likedById(id)
-    //           } catch (e: IOException) {
-    //               _data.postValue(_data.value?.copy(posts = old))
-    //           }
-    //       }
-    //   }
 
     fun removeById(id: Long) {
         thread {

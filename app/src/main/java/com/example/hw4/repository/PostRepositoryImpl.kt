@@ -38,48 +38,23 @@ class PostRepositoryImpl : PostRepository {
 
     override fun sharing(id: Long) {
         val request: Request = Request.Builder()
-            .post(gson.toJson(id).toRequestBody(jsonType))
-            .url("${BASE_URL}/api/slow/posts/$id/sharing")
+            .post(EMPTY_REQUEST)
+            .url("${BASE_URL}/api/posts/$id/sharing")
             .build()
 
-        client.newCall(request)
+       // client.newCall(request)
+       //     .execute()
+       //     .close()
+        return client.newCall(request)
             .execute()
-            .close()
+            .let { it.body?.string() ?: throw RuntimeException("body is null") }
+            .let { gson.fromJson(it, Post::class.java)
+            }
     }
-  // override fun likedById(id: Long) {
-  //     var request: Request = Request.Builder()
-  //         .url("${BASE_URL}/api/slow/posts/$id")
-  //         .build()
 
-  //     val post: Post = client.newCall(request)
-  //         .execute()
-  //         .let { it.body?.string() ?: throw RuntimeException("body is null") }
-  //         .let {
-  //             gson.fromJson(it, typeToken.type)
-  //         }
-
-  //     request = if (!post.likedByMe) {
-  //         Request.Builder()
-  //             .url("${BASE_URL}/api/slow/posts/$id/likes")
-  //             .post(EMPTY_REQUEST)
-  //             .build()
-  //     } else {
-  //         Request.Builder()
-  //             .url("${BASE_URL}/api/slow/posts/$id/likes")
-  //             .delete()
-  //             .build()
-  //     }
-
-  //     return client.newCall(request)
-  //         .execute()
-  //         .let { it.body?.string() ?: throw RuntimeException("body is null") }
-  //         .let {
-  //             gson.fromJson(it, typeToken.type)
-  //         }
-  // }
   override fun likedById(id: Long):Post {
       val request: Request = Request.Builder()
-          .url("${BASE_URL}/api/slow/posts/${id}/likes")
+          .url("${BASE_URL}/api/posts/${id}/likes")
           .post(EMPTY_REQUEST)
           .build()
 
@@ -91,7 +66,7 @@ class PostRepositoryImpl : PostRepository {
   }
     override fun unlikedById(id: Long):Post {
         val request: Request = Request.Builder()
-            .url("${BASE_URL}/api/slow/posts/${id}/likes")
+            .url("${BASE_URL}/api/posts/${id}/likes")
             .delete()
             .build()
 
@@ -107,7 +82,7 @@ class PostRepositoryImpl : PostRepository {
     override fun save(post: Post) {
         val request: Request = Request.Builder()
             .post(gson.toJson(post).toRequestBody(jsonType))
-            .url("${BASE_URL}/api/slow/posts")
+            .url("${BASE_URL}/api/posts")
             .build()
 
         client.newCall(request)
@@ -118,7 +93,7 @@ class PostRepositoryImpl : PostRepository {
     override fun removeById(id: Long) {
         val request: Request = Request.Builder()
             .delete()
-            .url("${BASE_URL}/api/slow/posts/$id")
+            .url("${BASE_URL}/api/posts/$id")
             .build()
 
         client.newCall(request)

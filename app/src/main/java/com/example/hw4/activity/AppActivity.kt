@@ -27,13 +27,13 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
             if (text?.isNotBlank() != true) {
                 return@let
             }
-                intent.removeExtra(Intent.EXTRA_TEXT)
-                findNavController(R.id.nav_host_fragment).navigate(
-                    R.id.action_feedFragment_to_newPostFragment,
-                    Bundle().apply {
-                        textArg = text
-                    }
-                )
+            intent.removeExtra(Intent.EXTRA_TEXT)
+            findNavController(R.id.nav_host_fragment).navigate(
+                R.id.action_feedFragment_to_newPostFragment,
+                Bundle().apply {
+                    textArg = text
+                }
+            )
         }
         checkGoogleApiAvailability()
     }
