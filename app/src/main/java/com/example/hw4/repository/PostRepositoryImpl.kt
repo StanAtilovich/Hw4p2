@@ -35,23 +35,6 @@ class PostRepositoryImpl : PostRepository {
             }
     }
 
-
-    override fun sharing(id: Long) {
-        val request: Request = Request.Builder()
-            .post(EMPTY_REQUEST)
-            .url("${BASE_URL}/api/posts/$id/sharing")
-            .build()
-
-       // client.newCall(request)
-       //     .execute()
-       //     .close()
-        return client.newCall(request)
-            .execute()
-            .let { it.body?.string() ?: throw RuntimeException("body is null") }
-            .let { gson.fromJson(it, Post::class.java)
-            }
-    }
-
   override fun likedById(id: Long):Post {
       val request: Request = Request.Builder()
           .url("${BASE_URL}/api/posts/${id}/likes")
