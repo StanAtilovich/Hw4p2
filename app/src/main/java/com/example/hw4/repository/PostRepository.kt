@@ -5,9 +5,14 @@ import com.example.hw4.DTO.Post
 
 
 interface PostRepository {
-    fun getAll(): List<Post>
+    fun getAll(callBack: PostCallBack)
     fun likedById(id: Long):Post
     fun unlikedById(id: Long):Post
     fun removeById(id: Long)
     fun save(post: Post)
+
+    interface PostCallBack {
+        fun onSuccess(post: List<Post>)
+        fun onError(e: java.lang.Exception)
+    }
 }
