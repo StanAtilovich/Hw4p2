@@ -8,6 +8,7 @@ interface PostRepository {
     fun getAll(callBack: PostCallBack)
     fun likedById(id: Long):Post
     fun unlikedById(id: Long):Post
+    fun sharing(id: Long)
     fun removeById(id: Long)
     fun save(post: Post)
 

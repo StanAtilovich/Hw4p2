@@ -130,6 +130,25 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
+    fun sharing(id: Long) {
+        thread {
+            val old = _data.value?.posts.orEmpty()
+            _data.run {
+                postValue(
+                    value?.copy(
+                        posts = value?.posts.orEmpty().map {
+                            if (it.id != id) it else it.copy(shareCount = it.shareCount + 1)
+                        }
+                    ))
+                try {
+                    repository.sharing(id)
+                } catch (e: IOException) {
+                    _data.postValue(_data.value?.copy(posts = old))
+                }
+            }
+        }
+    }
+
     fun removeById(id: Long) {
         thread {
             val old = _data.value?.posts.orEmpty()
