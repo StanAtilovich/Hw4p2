@@ -10,6 +10,7 @@ interface PostRepository {
     fun removeById(id: Long, callback: SaveRemoveCallback)
     fun getAllAsync(callback: PostCallBack<List<Post>>)
 
+
     interface PostCallBack<T> {
         fun onSuccess(value: T) {}
         fun onError(e: java.lang.Exception) {}
