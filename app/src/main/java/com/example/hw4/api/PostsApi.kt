@@ -4,7 +4,7 @@ import com.example.hw4.BuildConfig
 import com.example.hw4.DTO.Post
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Call
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
@@ -14,19 +14,19 @@ private const val BASE_URL = "${BuildConfig.BASE_URL}/api/slow/"
 
 interface PostsApiService {
     @GET("posts")
-    fun getAll(): Call<List<Post>>
+    fun getAll(): Response<List<Post>>
 
     @POST("posts/{postId}/likes")
-    fun likedByIdAsync(@Path("postId") id: Long): Call<Post>
+    suspend fun likedById(@Path("postId") id: Long): Response<Post>
 
     @DELETE("posts/{postId}/likes")
-    fun unlikedByIdAsync(@Path("postId") id: Long): Call<Post>
+    suspend fun unlikedByIdAsync(@Path("postId") id: Long): Response<Post>
 
     @POST("posts")
-    fun saveAsync(@Body post: Post): Call<Post>
+    suspend fun save(@Body post: Post): Response<Post>
 
     @DELETE("posts/{postId}")
-    fun removeById(@Path("postId") id: Long): Call<Unit>
+    suspend fun removeById(@Path("postId") id: Long): Response<Unit>
 }
 
 private val logging = HttpLoggingInterceptor().apply {

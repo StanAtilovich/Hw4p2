@@ -6,6 +6,7 @@ import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.example.hw4.DTO.Post
 
+
 @Entity
 data class PostEntity(
     @PrimaryKey(autoGenerate = true)
@@ -49,5 +50,8 @@ data class PostEntity(
             return Attachment(value, "", "")
         }}
 }
+
+fun List<PostEntity>.toDto() = map{it.toDto()}
+fun List<Post>.toEntity() = map { PostEntity.fromDto(it) }
 
 

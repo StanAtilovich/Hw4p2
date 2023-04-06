@@ -21,6 +21,7 @@ import com.example.hw4.adapter.OnInteractionListener
 import com.example.hw4.adapter.PostAdapter
 import com.example.hw4.databinding.FragmentFeedBinding
 import com.example.hw4.viewModel.PostViewModel
+import com.google.android.material.snackbar.Snackbar
 
 
 class FeedFragment : Fragment() {
@@ -40,25 +41,9 @@ class FeedFragment : Fragment() {
 
         val adapter = PostAdapter(object : OnInteractionListener {
             override fun onLike(post: Post) {
-                if (post.likedByMe) {
-                    viewModel.unlikeById(post.id)
-                } else {
-                    viewModel.likeById(post.id)
-                }
+                viewModel.likeById(post.id, post.likedByMe)
             }
 
-            override fun onShare(post: Post) {
-                val intent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, post.content)
-                    type = "text/plain"
-                }
-                val shareIntent =
-                    Intent.createChooser(intent, getString(R.string.chooser_share_post))
-                startActivity(shareIntent)
-
-                viewModel.sharing(post.id)
-            }
 
             override fun onPostClick(post: Post) {
                 findNavController().navigate(
@@ -96,11 +81,26 @@ class FeedFragment : Fragment() {
         binding.post.adapter = adapter
         viewModel.data.observe(viewLifecycleOwner) { state ->
             adapter.submitList(state.posts)
-            binding.progress.isVisible = state.loading
-            binding.errorGroup.isVisible = state.error
             binding.emptyText.isVisible = state.empty
-            binding.swipeRefreshLayout.isRefreshing = state.refreshing
         }
+
+        viewModel.dataState.observe(viewLifecycleOwner){ state ->
+            binding.progress.isVisible = state.loading
+            binding.swipeRefreshLayout.isRefreshing = state.refreshing
+            if (state.error){
+                Snackbar.make(binding.root, R.string.error_loading, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.retry_loading){
+                        viewModel.loadPosts()
+                    }
+                    .show()
+            }
+
+            binding.errorGroup.isVisible = state.error
+            binding.swipeRefreshLayout.setOnRefreshListener {
+                viewModel.refreshPosts()
+            }
+        }
+
         binding.retryButton.setOnClickListener {
             viewModel.loadPosts()
         }
@@ -142,7 +142,7 @@ class FeedFragment : Fragment() {
         }
         with(binding.swipeRefreshLayout) {
             setOnRefreshListener {
-                viewModel.refreshPosts()
+               viewModel.refreshPosts()
             }
 
             setSize(CircularProgressDrawable.LARGE)

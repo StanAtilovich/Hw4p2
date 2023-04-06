@@ -1,103 +1,49 @@
 package com.example.hw4.repository
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.map
 import com.example.hw4.DTO.Post
 import com.example.hw4.api.PostsApi
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.lang.Exception
+import com.example.hw4.dao.PostDao
+import com.example.hw4.entity.toDto
+import com.example.hw4.entity.toEntity
+import com.example.hw4.error.ApiException
+import com.example.hw4.error.NetworkException
+import com.example.hw4.error.UnknownException
+import java.io.IOException
 
 
-class PostRepositoryImpl : PostRepository {
-    override fun getAllAsync(callback: PostRepository.PostCallBack<List<Post>>) {
-        PostsApi.retrofitService.getAll()
-            .enqueue(object : Callback<List<Post>> {
-                override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
-                    try {
-                        if (!response.isSuccessful) {
-                            callback.onError(java.lang.RuntimeException(response.message()))
-                            return
-                        }
-                        callback.onSuccess(
-                            response.body() ?: throw RuntimeException("body is null")
-                        )
-                    } catch (e: Exception) {
-                        callback.onError(e)
-                    }
-                }
-                override fun onFailure(call: Call<List<Post>>, t: Throwable) {
-                    callback.onError(Exception(t))
-                }
-            }
-            )
+class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
+    override val data = dao.getAll().map { it.toDto() }
+    override suspend fun likedById(id: Long) {
+        //  TODO("Not yet implemented")
     }
-    override fun likedByIdAsync(
-        id: Long,
-        likedByMe: Boolean,
-        callback: PostRepository.Callback<Post>
-    ) {
-        if (likedByMe) {
-            PostsApi.retrofitService.unlikedByIdAsync(id)
-                .enqueue(object : Callback<Post> {
-                    override fun onResponse(call: Call<Post>, response: Response<Post>) {
-                        if (!response.isSuccessful) {
-                            callback.onError(RuntimeException(response.message()))
-                            return
-                        }
-                        callback.onSuccess(
-                            response.body() ?: throw RuntimeException("body is null")
-                        )
-                    }
-                    override fun onFailure(call: Call<Post>, t: Throwable) {
-                        throw RuntimeException(t)
-                    }
-                })
-        } else {
-            PostsApi.retrofitService.likedByIdAsync(id)
-                .enqueue(object : Callback<Post> {
-                    override fun onResponse(call: Call<Post>, response: Response<Post>) {
-                        if (!response.isSuccessful) {
-                            callback.onError(RuntimeException(response.message()))
-                            return
-                        }
-                        callback.onSuccess(
-                            response.body() ?: throw RuntimeException("body is null")
-                        )
-                    }
-                    override fun onFailure(call: Call<Post>, t: Throwable) {
-                        throw RuntimeException(t)
-                    }
-                })
+
+    override suspend fun save(post: Post) {
+        //  TODO("Not yet implemented")
+    }
+
+    override suspend fun removeById(id: Long) {
+        // TODO("Not yet implemented")
+    }
+
+    override suspend fun getAll() {
+        try {
+            val response = PostsApi.retrofitService.getAll()
+            if (!response.isSuccessful) {
+                throw ApiException(response.code(), response.message())
+            }
+            val body = response.body() ?: throw ApiException(response.code(), response.message())
+            dao.insert(body.toEntity())
+        } catch (e: ApiException) {
+            throw  e
+        } catch (e: IOException) {
+            throw NetworkException
+        } catch (e: Exception) {
+            throw UnknownException
         }
     }
-    override fun saveAsync(post: Post, callback: PostRepository.SaveRemoveCallback) {
-        PostsApi.retrofitService.saveAsync(post)
-            .enqueue(object : Callback<Post> {
-                override fun onResponse(call: Call<Post>, response: Response<Post>) {
-                    try {
-                        callback.onSuccess()
-                    } catch (e: Exception) {
-                        callback.onError(e)
-                    }
-                }
-                override fun onFailure(call: Call<Post>, t: Throwable) {
-                    callback.onError(Exception(t))
-                }
-            })
-    }
-    override fun removeById(id: Long, callback: PostRepository.SaveRemoveCallback) {
-        PostsApi.retrofitService.removeById(id)
-            .enqueue(object : Callback<Unit> {
-                override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
-                    try {
-                        callback.onSuccess()
-                    } catch (e: Exception) {
-                        callback.onError(e)
-                    }
-                }
-                override fun onFailure(call: Call<Unit>, t: Throwable) {
-                    callback.onError(Exception(t))
-                }
-            })
-    }
 }
+
+
+
