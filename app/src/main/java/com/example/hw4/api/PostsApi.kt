@@ -14,7 +14,7 @@ private const val BASE_URL = "${BuildConfig.BASE_URL}/api/slow/"
 
 interface PostsApiService {
     @GET("posts")
-    fun getAll(): Response<List<Post>>
+    suspend fun getAll(): Response<List<Post>>
 
     @POST("posts/{postId}/likes")
     suspend fun likedById(@Path("postId") id: Long): Response<Post>
@@ -27,6 +27,7 @@ interface PostsApiService {
 
     @DELETE("posts/{postId}")
     suspend fun removeById(@Path("postId") id: Long): Response<Unit>
+
 }
 
 private val logging = HttpLoggingInterceptor().apply {

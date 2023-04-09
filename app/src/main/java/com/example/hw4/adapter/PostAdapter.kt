@@ -52,7 +52,7 @@ class PostViewHolder(
             published.text = post.published
             content.text = post.content
             likes.isChecked = post.likedByMe
-            likes.text =  "${post.likes}"//post.likes.toString()
+            likes.text =  "${post.likes}"
             shares.isChecked = post.shareByMe
             shares.text = post.shareCount.toString()
             views.isChecked = post.viewByMe
@@ -73,11 +73,8 @@ class PostViewHolder(
                     .circleCrop()
                     .into(binding.avatar)
             }
-
-
-
             if (post.attachment == null) {
-                attachment.isVisible = false
+                attachment.isVisible = false//nnn
             } else {
                 Glide.with(binding.attachment)
                     .load(urlAttachment)
@@ -85,7 +82,7 @@ class PostViewHolder(
                     .error(R.drawable.ic_baseline_error_24)
                     .timeout(10_000)
                     .into(binding.attachment)
-                attachment.isVisible = true
+                attachment.isVisible = false//nnn
             }
 
 

@@ -10,9 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.example.hw4.util.AndroidUtils
 import com.example.hw4.DTO.Post
 import com.example.hw4.R
@@ -25,7 +24,7 @@ import com.google.android.material.snackbar.Snackbar
 
 
 class FeedFragment : Fragment() {
-
+    private val viewModel: PostViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,15 +34,12 @@ class FeedFragment : Fragment() {
             inflater,
             container, false
         )
-        val viewModel: PostViewModel by viewModels(
-            ownerProducer = ::requireParentFragment
-        )
+
 
         val adapter = PostAdapter(object : OnInteractionListener {
             override fun onLike(post: Post) {
-                viewModel.likeById(post.id, post.likedByMe)
+                viewModel.likeById(post.id)
             }
-
 
             override fun onPostClick(post: Post) {
                 findNavController().navigate(
@@ -79,27 +75,24 @@ class FeedFragment : Fragment() {
 
         )
         binding.post.adapter = adapter
-        viewModel.data.observe(viewLifecycleOwner) { state ->
-            adapter.submitList(state.posts)
-            binding.emptyText.isVisible = state.empty
-        }
-
-        viewModel.dataState.observe(viewLifecycleOwner){ state ->
+        viewModel.dataState.observe(viewLifecycleOwner) { state ->
             binding.progress.isVisible = state.loading
             binding.swipeRefreshLayout.isRefreshing = state.refreshing
-            if (state.error){
+            if (state.error) {
                 Snackbar.make(binding.root, R.string.error_loading, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.retry_loading){
-                        viewModel.loadPosts()
-                    }
+                    .setAction(R.string.retry_loading) { viewModel.loadPosts() }
                     .show()
             }
-
-            binding.errorGroup.isVisible = state.error
-            binding.swipeRefreshLayout.setOnRefreshListener {
-                viewModel.refreshPosts()
-            }
         }
+        viewModel.data.observe(viewLifecycleOwner) { state ->
+            adapter.submitList(state.posts)
+            binding.errorGroup.isVisible = state.empty
+        }
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.refreshPosts()
+        }
+
 
         binding.retryButton.setOnClickListener {
             viewModel.loadPosts()
@@ -125,29 +118,10 @@ class FeedFragment : Fragment() {
         }
 
 
-        binding.deleted.setOnClickListener {
-            with(binding.content) {
-                viewModel.clear()
-                setText("")
-                clearFocus()
-                AndroidUtils.hideKeyboard(this)
-                binding.editGroup.visibility = View.INVISIBLE
-            }
-            return@setOnClickListener
-        }
-
 
         binding.fab.setOnClickListener {
             findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
         }
-        with(binding.swipeRefreshLayout) {
-            setOnRefreshListener {
-               viewModel.refreshPosts()
-            }
-
-            setSize(CircularProgressDrawable.LARGE)
-        }
-
         return binding.root
 
     }
