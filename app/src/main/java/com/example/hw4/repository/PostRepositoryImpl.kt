@@ -20,27 +20,10 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
 
     override suspend fun likedById(id: Long) {
         try {
-            data.value?.find { it.id == id }?.let {
-             it.copy(
-                 likedByMe = !it.likedByMe,
-                 likes = it.likes + if (it.likedByMe)
-               -1 else +1
-             ).apply {
-
-                 dao.insert(PostEntity.fromDto(this))
-
-                PostsApi.retrofitService.let {
-                    api -> if (likedByMe) api.likedById(id) else api.unlikedByIdAsync(id)
-                }.apply {
-                    if (!isSuccessful){
-                        throw ApiException(code(),"Ошибка")
-                    }
-                }}
-
-            }
+            dao.likeById(id)
             val response = PostsApi.retrofitService.likedById(id)
             if (!response.isSuccessful){
-                throw ApiException(response.code(),response.message())
+                throw ApiException(response.code(), response.message())
             }
         }catch (e: IOException){
             throw NetworkException
@@ -49,8 +32,19 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
         }
     }
 
-
-
+    override suspend fun unliked(id: Long) {
+        try {
+            dao.likeById(id)
+            val response = PostsApi.retrofitService.unlikedByIdAsync(id)
+            if (!response.isSuccessful) {
+                throw ApiException(response.code(), response.message())
+            }
+        } catch (e: IOException) {
+            throw NetworkException
+        } catch (e: Exception) {
+            throw UnknownException
+        }
+    }
 
     override suspend fun save(post: Post) {
         try {
@@ -71,16 +65,16 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
 
     override suspend fun removeById(id: Long) {
         try {
-          dao.removeById(id)
+            dao.removeById(id)
             val response = PostsApi.retrofitService.removeById(id)
-            if (!response.isSuccessful){
-                throw ApiException(response.code(),response.message())
+            if (!response.isSuccessful) {
+                throw ApiException(response.code(), response.message())
             }
-        }catch (e: ApiException){
+        } catch (e: ApiException) {
             throw e
-        } catch (e: IOException){
+        } catch (e: IOException) {
             throw NetworkException
-        }catch (e: Exception){
+        } catch (e: Exception) {
             throw UnknownException
         }
     }
