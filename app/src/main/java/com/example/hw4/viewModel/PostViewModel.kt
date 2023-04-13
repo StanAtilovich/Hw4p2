@@ -9,6 +9,9 @@ import com.example.hw4.model.FeedModelState
 import com.example.hw4.repository.PostRepository
 import com.example.hw4.repository.PostRepositoryImpl
 import com.example.hw4.util.SingleLiveEvent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 
@@ -32,7 +35,16 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: PostRepository =
         PostRepositoryImpl(AppDb.getInstance(application).postDao())
     private val _dataState = MutableLiveData(FeedModelState())
-    val data: LiveData<FeedModel> = repository.data.map { FeedModel(it, it.isEmpty()) }
+    val data: LiveData<FeedModel> = repository.data
+        .map { FeedModel(it, it.isEmpty()) }
+        .asLiveData(Dispatchers.Default)
+
+    val newerCount: LiveData<Int> = data.switchMap {
+        repository.getNewerCount(it.posts.firstOrNull()?.id ?: 0)
+            .catch { e -> _dataState.postValue(FeedModelState(error = true)) }
+            .asLiveData(Dispatchers.Default)
+    }
+
     val dataState: LiveData<FeedModelState>
         get() = _dataState
 
@@ -65,6 +77,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             _dataState.value = FeedModelState(loading = true)
             repository.getAll()
             _dataState.value = FeedModelState()
+            _dataState.value = FeedModelState(Shadow = true)
         } catch (e: Exception) {
             _dataState.value = FeedModelState(error = true)
         }
@@ -118,6 +131,15 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     fun clear() {
         edited.value = empty
+    }
+
+    fun newPostView() = viewModelScope.launch {
+        try {
+            repository.showNewPost()
+            _dataState.value = FeedModelState(Shadow = true)
+        }catch (e: Exception){
+            _dataState.value = FeedModelState(error = true)
+        }
     }
 }
 

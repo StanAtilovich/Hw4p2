@@ -9,6 +9,24 @@
     android:padding="@dimen/indent"
     tools:context=".activity.FeedFragment">
 
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/newerCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/ic_baseline_arrow_upward_24"
+        android:text="@string/newer_post"
+        android:layout_marginTop="@dimen/fab_margin"
+        android:checkable="true"
+        android:textSize="16sp"
+        android:padding="12dp"
+        app:cornerRadius="@dimen/fab_margin"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

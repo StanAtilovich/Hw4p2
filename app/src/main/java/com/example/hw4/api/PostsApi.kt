@@ -16,6 +16,9 @@ interface PostsApiService {
     @GET("posts")
     suspend fun getAll(): Response<List<Post>>
 
+    @GET("posts/{postId}/newer")
+    suspend fun getNewer(@Path("postId") id: Long): Response<List<Post>>
+
     @POST("posts/{postId}/likes")
     suspend fun likedById(@Path("postId") id: Long): Response<Post>
 

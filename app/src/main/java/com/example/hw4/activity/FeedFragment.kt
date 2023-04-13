@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.example.hw4.util.AndroidUtils
 import com.example.hw4.DTO.Post
 import com.example.hw4.R
@@ -21,6 +22,10 @@ import com.example.hw4.adapter.PostAdapter
 import com.example.hw4.databinding.FragmentFeedBinding
 import com.example.hw4.viewModel.PostViewModel
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlin.coroutines.EmptyCoroutineContext
 
 
 class FeedFragment : Fragment() {
@@ -89,6 +94,21 @@ class FeedFragment : Fragment() {
             binding.errorGroup.isVisible = state.empty
         }
 
+
+        viewModel.newerCount.observe(viewLifecycleOwner) { state ->
+            binding.newerCount.isVisible = false
+            CoroutineScope(EmptyCoroutineContext).launch {
+                viewModel.newPostView()
+                delay(25)
+            }
+            binding.post.smoothScrollToPosition(0)
+
+        }
+
+        viewModel.newerCount.observe(viewLifecycleOwner) { state ->
+            binding.newerCount.isVisible = state > 0
+        }
+
         binding.swipeRefreshLayout.setOnRefreshListener {
             viewModel.refreshPosts()
         }
@@ -116,6 +136,14 @@ class FeedFragment : Fragment() {
             findNavController().navigateUp()
             binding.editGroup.visibility = View.INVISIBLE
         }
+
+        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(postitionStart: Int, itemCount: Int) {
+                if (postitionStart == 0) {
+                    binding.post.smoothScrollToPosition(0)
+                }
+            }
+        })
 
 
 

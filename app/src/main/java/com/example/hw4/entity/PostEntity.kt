@@ -23,7 +23,10 @@ data class PostEntity(
     val video: String?,
     val authorAvatar: String,
     @TypeConverters(AttachmentConverter::class)
-    val attachment: Attachment?
+    val attachment: Attachment?,
+
+    val hidden: Boolean = false,
+
 
 
 ) {
