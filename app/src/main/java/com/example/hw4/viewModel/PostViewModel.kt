@@ -135,7 +135,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     fun newPostView() = viewModelScope.launch {
         try {
-            repository.showNewPost()
+            repository
             _dataState.value = FeedModelState(Shadow = true)
         }catch (e: Exception){
             _dataState.value = FeedModelState(error = true)

@@ -95,7 +95,7 @@ class FeedFragment : Fragment() {
         }
 
 
-        viewModel.newerCount.observe(viewLifecycleOwner) { state ->
+        viewModel.newerCount.observe(viewLifecycleOwner) {
             binding.newerCount.isVisible = false
             CoroutineScope(EmptyCoroutineContext).launch {
                 viewModel.newPostView()

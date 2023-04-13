@@ -15,8 +15,8 @@ interface PostDao {
     @Query("SELECT * FROM PostEntity ORDER BY id DESC")
    fun getAll(): Flow<List<PostEntity>>
 
-    @Query("SELECT * FROM PostEntity WHERE hidden = 0 ORDER BY id DESC")
-    fun getVisible(): Flow<List<PostEntity>>
+//   @Query("SELECT * FROM PostEntity WHERE hidden = 0 ORDER BY id DESC")
+//   fun getVisible(): Flow<List<PostEntity>>
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -38,16 +38,13 @@ interface PostDao {
     suspend fun likeById(id: Long)
 
 
-    @Query("UPDATE FROM PostEntity SET hidden = 0")
-    suspend fun readAll(id: Long)
+    @Query("UPDATE PostEntity SET hidden = 0")
+    suspend fun readAll()
+
+    @Query("SELECT COUNT(*) FROM PostEntity WHERE hidden = 1")
+    fun getUnreadCount(): Flow<Int>
 
 
-    @Query(
-        """
-        UPDATE PostEntity SET isNew = 0
-        WHERE isNew = 1
-        """
-    )
-    suspend fun showNewPosts(id: Long)
+
 
 }
