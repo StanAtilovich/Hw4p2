@@ -28,7 +28,8 @@ private val empty = Post(
     countView = 0,
     video = null,
     authorAvatar = "",
-    attachment = null
+    attachment = null,
+    hidden = false
 )
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
@@ -135,7 +136,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     fun newPostView() = viewModelScope.launch {
         try {
-            repository
+            repository.getVisible()
             _dataState.value = FeedModelState(Shadow = true)
         }catch (e: Exception){
             _dataState.value = FeedModelState(error = true)

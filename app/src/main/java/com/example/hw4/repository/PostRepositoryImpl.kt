@@ -70,6 +70,9 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
         .catch { e -> throw  AppError.from(e) }
         .flowOn(Dispatchers.Default)
 
+  override suspend fun getVisible() {
+      dao.getVisible()
+  }
 
 
     override suspend fun save(post: Post) {
@@ -121,6 +124,8 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
             throw UnknownException
         }
     }
+
+
 }
 
 

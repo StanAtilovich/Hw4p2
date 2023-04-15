@@ -12,11 +12,11 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PostDao {
-    @Query("SELECT * FROM PostEntity ORDER BY id DESC")
-   fun getAll(): Flow<List<PostEntity>>
+   @Query("SELECT * FROM PostEntity WHERE hidden = 0 ORDER BY id DESC") //("SELECT * FROM PostEntity ORDER BY id DESC")
+  fun getAll(): Flow<List<PostEntity>>
 
-//   @Query("SELECT * FROM PostEntity WHERE hidden = 0 ORDER BY id DESC")
-//   fun getVisible(): Flow<List<PostEntity>>
+   @Query("SELECT * FROM PostEntity WHERE hidden = 0 ORDER BY id DESC")
+   fun getVisible(): Flow<List<PostEntity>>
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -41,9 +41,8 @@ interface PostDao {
     @Query("UPDATE PostEntity SET hidden = 0")
     suspend fun readAll()
 
-    @Query("SELECT COUNT(*) FROM PostEntity WHERE hidden = 1")
+    @Query("SELECT COUNT(*) FROM PostEntity WHERE hidden = 0")
     fun getUnreadCount(): Flow<Int>
-
 
 
 

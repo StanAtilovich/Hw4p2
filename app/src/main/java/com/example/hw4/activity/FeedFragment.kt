@@ -109,6 +109,11 @@ class FeedFragment : Fragment() {
             binding.newerCount.isVisible = state > 0
         }
 
+        binding.newerCount.setOnClickListener {
+            viewModel.loadPosts()
+            binding.newerCount.isVisible =false
+        }
+
         binding.swipeRefreshLayout.setOnRefreshListener {
             viewModel.refreshPosts()
         }

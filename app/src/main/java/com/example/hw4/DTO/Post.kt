@@ -16,7 +16,8 @@ data class Post(
     val countView: Int,
     val video: String?,
     val authorAvatar: String,
-    val attachment: Attachment?
+    val attachment: Attachment?,
+    val hidden: Boolean,
     )
 
 

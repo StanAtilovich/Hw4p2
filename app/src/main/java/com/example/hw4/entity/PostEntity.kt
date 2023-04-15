@@ -22,19 +22,17 @@ data class PostEntity(
     val countView: Int,
     val video: String?,
     val authorAvatar: String,
-    @TypeConverters(AttachmentConverter::class)
     val attachment: Attachment?,
-
     val hidden: Boolean = false,
 
 
 
 ) {
-    fun toDto()= Post(id, author, content, published, likedByMe,likCount,shareByMe,shareCount,viewByMe,countView,video , authorAvatar ,attachment)
+    fun toDto()= Post(id, author, content, published, likedByMe,likCount,shareByMe,shareCount,viewByMe,countView,video , authorAvatar ,attachment, hidden)
 
     companion object {
         fun fromDto(dto: Post) =
-            PostEntity(dto.id, dto.author, dto.content, dto.published, dto.likedByMe, dto.likes,dto.shareByMe,dto.shareCount,dto.viewByMe,dto.countView,dto.video,dto.authorAvatar, dto.attachment)
+            PostEntity(dto.id, dto.author, dto.content, dto.published, dto.likedByMe, dto.likes,dto.shareByMe,dto.shareCount,dto.viewByMe,dto.countView,dto.video,dto.authorAvatar, dto.attachment, dto.hidden)
 
 
     }
