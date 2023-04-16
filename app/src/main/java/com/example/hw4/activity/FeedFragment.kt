@@ -110,7 +110,7 @@ class FeedFragment : Fragment() {
         }
 
         binding.newerCount.setOnClickListener {
-            viewModel.loadPosts()
+            viewModel.readAll()
             binding.newerCount.isVisible =false
         }
 
@@ -120,7 +120,7 @@ class FeedFragment : Fragment() {
 
 
         binding.retryButton.setOnClickListener {
-            viewModel//newPostView()       //loadPosts()
+            viewModel.loadPosts()
             binding.retryButton.isVisible = false
         }
 

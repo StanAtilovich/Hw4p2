@@ -17,6 +17,7 @@ interface PostRepository {
 
    fun getNewerCount(id: Long): Flow<Int>
    suspend fun getVisible()
+   suspend fun readAll()
 
 
 

@@ -142,6 +142,14 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             _dataState.value = FeedModelState(error = true)
         }
     }
+fun readAll() = viewModelScope.launch {
+    try {
+        repository.readAll()
+        _dataState.value = FeedModelState(Shadow = true)
+    }catch (e: Exception){
+        _dataState.value = FeedModelState(error = true)
+    }
+}
 }
 
 

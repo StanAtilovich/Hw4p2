@@ -74,6 +74,10 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
       dao.getVisible()
   }
 
+   override suspend fun readAll() {
+       dao.readAll()
+   }
+
 
     override suspend fun save(post: Post) {
         try {
