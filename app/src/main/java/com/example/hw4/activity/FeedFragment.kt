@@ -120,7 +120,7 @@ class FeedFragment : Fragment() {
 
 
         binding.retryButton.setOnClickListener {
-            viewModel.loadPosts()
+            viewModel.newPostView()//loadPosts()
             binding.retryButton.isVisible = false
         }
 
