@@ -15,7 +15,7 @@ interface PostDao {
    @Query("SELECT * FROM PostEntity WHERE hidden = 0 ORDER BY id DESC") //("SELECT * FROM PostEntity ORDER BY id DESC")
   fun getAll(): Flow<List<PostEntity>>
 
-   @Query("SELECT * FROM PostEntity WHERE hidden = 0 ORDER BY id DESC")
+   @Query("SELECT * FROM PostEntity WHERE hidden = 0 ORDER BY id DESC") //"SELECT * FROM PostEntity WHERE hidden = 0 ORDER BY id DESC"
    fun getVisible(): Flow<List<PostEntity>>
 
 
