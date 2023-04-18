@@ -1,13 +1,13 @@
 package com.example.hw4.activity
 
 import android.os.Bundle
+import android.view.*
 
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.hw4.R
 import com.example.hw4.databinding.FragmentNewPostBinding
 import com.example.hw4.util.AndroidUtils
 import com.example.hw4.util.StringArg
@@ -37,20 +37,43 @@ class NewPostFragment : Fragment() {
         arguments?.textArg?.let(binding.edit::setText)
 
         binding.edit.requestFocus()
-        binding.ok.setOnClickListener {
-            viewModel.changeContent(binding.edit.text.toString())
-            viewModel.save()
-            AndroidUtils.hideKeyboard(requireView())
-            binding.ok.visibility = View.INVISIBLE
-            binding.bottomAppBar.visibility = View.INVISIBLE
+      // binding.ok.setOnClickListener {
+      //     viewModel.changeContent(binding.edit.text.toString())
+      //     viewModel.save()
+      //     AndroidUtils.hideKeyboard(requireView())
+      //     binding.ok.visibility = View.INVISIBLE
+      //     binding.bottomAppBar.visibility = View.INVISIBLE
+      //  }
+        activity?.addMenuProvider(object :MenuProvider{
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_new_post,menu)
+            }
 
-        }
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when(menuItem.itemId){
+                    R.id.ok -> {
+                        viewModel.changeContent(binding.edit.text.toString())
+                        viewModel.save()
+                        AndroidUtils.hideKeyboard(requireView())
+                        true
+                    }
+                    else -> false
+                }
+            }
+
+        }, viewLifecycleOwner)
+
+        
+
         viewModel.postCreated.observe(viewLifecycleOwner) {
             viewModel.loadPosts()
             findNavController().navigateUp()
 
         }
         return binding.root
+
+
+
     }
 
 }
