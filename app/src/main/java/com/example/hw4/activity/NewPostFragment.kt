@@ -1,9 +1,15 @@
 package com.example.hw4.activity
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.*
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toFile
 
 import androidx.core.view.MenuProvider
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -12,6 +18,10 @@ import com.example.hw4.databinding.FragmentNewPostBinding
 import com.example.hw4.util.AndroidUtils
 import com.example.hw4.util.StringArg
 import com.example.hw4.viewModel.PostViewModel
+import com.github.dhaval2404.imagepicker.ImagePicker
+import com.google.android.material.snackbar.Snackbar
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 
 
 class NewPostFragment : Fragment() {
@@ -23,6 +33,7 @@ class NewPostFragment : Fragment() {
         ownerProducer = ::requireParentFragment
     )
 
+    @OptIn(ExperimentalContracts::class)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,7 +47,50 @@ class NewPostFragment : Fragment() {
 
         arguments?.textArg?.let(binding.edit::setText)
 
-        binding.edit.requestFocus()
+        val startForProfileImageResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            result: ActivityResult ->
+            val resultCode = result.resultCode
+            val data = result.data
+
+            when (resultCode){
+                ImagePicker.RESULT_ERROR -> Snackbar.make(binding.root,
+                ImagePicker.getError(data), Snackbar.LENGTH_SHORT).show()
+                Activity.RESULT_OK -> {
+                    val fileUri = data?.data
+
+                    viewModel.changePhoto(fileUri, fileUri?.toFile())
+                }
+            }
+        }
+
+        viewModel.photo.observe(viewLifecycleOwner){
+            binding.photo.setImageURI(it.uri)
+            binding.photoContainer.isVisible = it.uri !=null
+        }
+
+
+        binding.pickPhoto.setOnClickListener {
+            ImagePicker.with(this)
+                .crop()
+                .galleryOnly()
+                .compress(2048)
+                .createIntent(startForProfileImageResult::launch)
+        }
+
+        binding.takePhoto.setOnClickListener {
+            ImagePicker.with(this)
+                .crop()
+                .cameraOnly()
+                .compress(2048)
+                .createIntent(startForProfileImageResult::launch)
+        }
+
+        binding.removePhoto.setOnClickListener {
+            viewModel.deletePhoto()
+        }
+
+
+            binding.edit.requestFocus()
       // binding.ok.setOnClickListener {
       //     viewModel.changeContent(binding.edit.text.toString())
       //     viewModel.save()
@@ -51,7 +105,7 @@ class NewPostFragment : Fragment() {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when(menuItem.itemId){
-                    R.id.ok -> {
+                    R.id.ok-> {
                         viewModel.changeContent(binding.edit.text.toString())
                         viewModel.save()
                         AndroidUtils.hideKeyboard(requireView())
@@ -63,7 +117,7 @@ class NewPostFragment : Fragment() {
 
         }, viewLifecycleOwner)
 
-        
+
 
         viewModel.postCreated.observe(viewLifecycleOwner) {
             viewModel.loadPosts()
@@ -75,5 +129,6 @@ class NewPostFragment : Fragment() {
 
 
     }
+
 
 }

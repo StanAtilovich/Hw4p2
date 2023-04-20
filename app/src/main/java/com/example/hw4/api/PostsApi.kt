@@ -1,7 +1,9 @@
 package com.example.hw4.api
 
 import com.example.hw4.BuildConfig
+import com.example.hw4.DTO.Media
 import com.example.hw4.DTO.Post
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
@@ -30,6 +32,9 @@ interface PostsApiService {
 
     @DELETE("posts/{postId}")
     suspend fun removeById(@Path("postId") id: Long): Response<Unit>
+@Multipart
+    @POST("media")
+    suspend fun upload(@Part file: MultipartBody.Part): Response<Media>
 
 }
 

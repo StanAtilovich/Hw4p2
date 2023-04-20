@@ -3,7 +3,6 @@ package com.example.hw4.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
-import androidx.room.TypeConverters
 import com.example.hw4.DTO.Post
 
 
@@ -39,17 +38,22 @@ data class PostEntity(
 
     class AttachmentConverter {
         @TypeConverter
-        fun fromAttachment(attachment: Attachment?): String? {
+        fun fromAttachment(attachment: Attachment?): String {
             if (attachment != null) {
                 return attachment.url
             } else return ""
 
         }
 
-        @TypeConverter
-        fun toAttachment(value: String): Attachment{
-            return Attachment(value, "", "")
-        }}
+       @TypeConverter
+       fun toAttachment(value: String): Attachment{
+           return Attachment(value, type = AttachmentType.IMAGE)
+       }
+
+
+
+
+    }
 }
 
 fun List<PostEntity>.toDto() = map{it.toDto()}

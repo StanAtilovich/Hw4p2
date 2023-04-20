@@ -4,6 +4,7 @@ package com.example.hw4.repository
 import androidx.lifecycle.LiveData
 import com.example.hw4.DTO.Post
 import kotlinx.coroutines.flow.Flow
+import java.io.File
 
 
 interface PostRepository {
@@ -18,9 +19,7 @@ interface PostRepository {
    fun getNewerCount(id: Long): Flow<Int>
    suspend fun getVisible()
    suspend fun readAll()
-
-
-
+    suspend fun saveWithAttachment(post: Post, file: File)
 
 
 }

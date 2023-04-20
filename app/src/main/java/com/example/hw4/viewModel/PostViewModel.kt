@@ -1,7 +1,9 @@
 package com.example.hw4.viewModel
 
 import android.app.Application
+import android.net.Uri
 import androidx.lifecycle.*
+import com.example.hw4.DTO.PhotoModel
 import com.example.hw4.DTO.Post
 import com.example.hw4.db.AppDb
 import com.example.hw4.model.FeedModel
@@ -13,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.io.File
 
 
 private val empty = Post(
@@ -31,8 +34,11 @@ private val empty = Post(
     attachment = null,
     hidden = false
 )
+private val noPhoto = PhotoModel(null, null)
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
+
+
     private val repository: PostRepository =
         PostRepositoryImpl(AppDb.getInstance(application).postDao())
     private val _dataState = MutableLiveData(FeedModelState())
@@ -57,6 +63,11 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val _error = SingleLiveEvent<String>()
     val error: LiveData<String>
         get() = _error
+
+    private val _photo = MutableLiveData(noPhoto)
+    val photo: LiveData<PhotoModel>
+        get() = _photo
+
 
     init {
         loadPosts()
@@ -108,7 +119,12 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             _postCreated.postValue(Unit)
             viewModelScope.launch {
                 try {
-                    repository.save(it)
+                    when(_photo.value){
+                        noPhoto -> repository.save(it)
+                        else -> _photo.value?.file?.let {
+                            file -> repository.saveWithAttachment(it, file)
+                        }
+                    }
                     _dataState.value = FeedModelState()
                 } catch (e: Exception) {
                     _dataState.value = FeedModelState(error = true)
@@ -134,22 +150,34 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         edited.value = empty
     }
 
+
+    fun changePhoto(uri: Uri?, file: File?) {
+        _photo.value = PhotoModel(uri, null)
+    }
+
+    fun deletePhoto() {
+        _photo.value = noPhoto
+    }
+
     fun newPostView() = viewModelScope.launch {
         try {
             repository.getVisible()
             _dataState.value = FeedModelState(Shadow = true)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             _dataState.value = FeedModelState(error = true)
         }
     }
-fun readAll() = viewModelScope.launch {
-    try {
-        repository.readAll()
-        _dataState.value = FeedModelState(Shadow = true)
-    }catch (e: Exception){
-        _dataState.value = FeedModelState(error = true)
+
+    fun readAll() = viewModelScope.launch {
+        try {
+            repository.readAll()
+            _dataState.value = FeedModelState(Shadow = true)
+        } catch (e: Exception) {
+            _dataState.value = FeedModelState(error = true)
+        }
     }
-}
+
+
 }
 
 
