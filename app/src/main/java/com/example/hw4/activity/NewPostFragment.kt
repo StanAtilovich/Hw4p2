@@ -1,5 +1,6 @@
 package com.example.hw4.activity
 
+import PostViewModel
 import android.app.Activity
 import android.os.Bundle
 import android.view.*
@@ -17,7 +18,7 @@ import com.example.hw4.R
 import com.example.hw4.databinding.FragmentNewPostBinding
 import com.example.hw4.util.AndroidUtils
 import com.example.hw4.util.StringArg
-import com.example.hw4.viewModel.PostViewModel
+
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.snackbar.Snackbar
 import kotlin.contracts.ExperimentalContracts
@@ -48,13 +49,13 @@ class NewPostFragment : Fragment() {
         arguments?.textArg?.let(binding.edit::setText)
 
         val startForProfileImageResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            result: ActivityResult ->
+                result: ActivityResult ->
             val resultCode = result.resultCode
             val data = result.data
 
             when (resultCode){
                 ImagePicker.RESULT_ERROR -> Snackbar.make(binding.root,
-                ImagePicker.getError(data), Snackbar.LENGTH_SHORT).show()
+                    ImagePicker.getError(data), Snackbar.LENGTH_SHORT).show()
                 Activity.RESULT_OK -> {
                     val fileUri = data?.data
 
@@ -90,14 +91,14 @@ class NewPostFragment : Fragment() {
         }
 
 
-            binding.edit.requestFocus()
-      // binding.ok.setOnClickListener {
-      //     viewModel.changeContent(binding.edit.text.toString())
-      //     viewModel.save()
-      //     AndroidUtils.hideKeyboard(requireView())
-      //     binding.ok.visibility = View.INVISIBLE
-      //     binding.bottomAppBar.visibility = View.INVISIBLE
-      //  }
+        binding.edit.requestFocus()
+        // binding.ok.setOnClickListener {
+        //     viewModel.changeContent(binding.edit.text.toString())
+        //     viewModel.save()
+        //     AndroidUtils.hideKeyboard(requireView())
+        //     binding.ok.visibility = View.INVISIBLE
+        //     binding.bottomAppBar.visibility = View.INVISIBLE
+        //  }
         activity?.addMenuProvider(object :MenuProvider{
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.menu_new_post,menu)

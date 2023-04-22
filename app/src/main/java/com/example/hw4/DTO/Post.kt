@@ -18,10 +18,10 @@ data class Post(
     val countView: Int,
     val video: String?,
     val authorAvatar: String,
-    val attachment: Attachment? = null,
     val hidden: Boolean,
-    )
-data class PhotoModel(val uri: Uri?, val file: File?)
+    val attachment: Attachment? = null,
+)
+data class MediaUpload(val file: File)
 data class Media(val id: String)
 
 

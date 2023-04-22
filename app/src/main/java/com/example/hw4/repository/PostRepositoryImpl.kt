@@ -2,6 +2,7 @@ package com.example.hw4.repository
 
 
 import com.example.hw4.DTO.Media
+import com.example.hw4.DTO.MediaUpload
 import com.example.hw4.DTO.Post
 import com.example.hw4.api.PostsApi
 import com.example.hw4.dao.PostDao
@@ -15,7 +16,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import java.io.File
 import java.io.IOException
 
 
@@ -78,12 +78,11 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
         dao.readAll()
     }
 
-    override suspend fun saveWithAttachment(post: Post, file: File) {
+    override suspend fun saveWithAttachment(post: Post, upload: MediaUpload) {
         try {
-            val  upload = upload(file)
-            val postWthAttachment = post.copy(attachment = Attachment(upload.id,AttachmentType.IMAGE ))
+            val  media = upload(upload)
+            val postWthAttachment = post.copy(attachment = Attachment(media.id,AttachmentType.IMAGE ))
             save(postWthAttachment)
-
         } catch (e: ApiException) {
             throw  e
         } catch (e: IOException) {
@@ -93,10 +92,10 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
         }
     }
 
-    private suspend fun upload(file: File): Media {
+    override suspend fun upload(upload: MediaUpload): Media {
         try {
             val data = MultipartBody.Part.createFormData(
-                "file", file.name, file.asRequestBody()
+                "file", upload.file.name, upload.file.asRequestBody()
             )
             val response = PostsApi.retrofitService.upload(data)
             if (!response.isSuccessful) {
@@ -165,6 +164,5 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
 
 
 }
-
 
 

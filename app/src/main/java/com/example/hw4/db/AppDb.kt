@@ -5,11 +5,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.example.hw4.dao.Converters
 import com.example.hw4.dao.PostDao
 import com.example.hw4.entity.PostEntity
 
 
-@TypeConverters(PostEntity.AttachmentConverter::class)
+@TypeConverters(Converters::class)
 @Database(entities = [PostEntity::class], version = 1)
 abstract class AppDb : RoomDatabase() {
     abstract fun postDao(): PostDao

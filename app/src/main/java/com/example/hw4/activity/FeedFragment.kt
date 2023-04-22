@@ -1,6 +1,7 @@
 package com.example.hw4.activity
 
 
+import PostViewModel
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
@@ -20,7 +21,7 @@ import com.example.hw4.activity.NewPostFragment.Companion.textArg
 import com.example.hw4.adapter.OnInteractionListener
 import com.example.hw4.adapter.PostAdapter
 import com.example.hw4.databinding.FragmentFeedBinding
-import com.example.hw4.viewModel.PostViewModel
+
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay

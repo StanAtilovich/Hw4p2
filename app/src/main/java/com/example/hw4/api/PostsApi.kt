@@ -32,7 +32,7 @@ interface PostsApiService {
 
     @DELETE("posts/{postId}")
     suspend fun removeById(@Path("postId") id: Long): Response<Unit>
-@Multipart
+    @Multipart
     @POST("media")
     suspend fun upload(@Part file: MultipartBody.Part): Response<Media>
 
@@ -40,7 +40,7 @@ interface PostsApiService {
 
 private val logging = HttpLoggingInterceptor().apply {
     if (BuildConfig.DEBUG) {
-        level = HttpLoggingInterceptor.Level.BODY
+        level = HttpLoggingInterceptor.Level.HEADERS
     }
 }
 private val client = OkHttpClient.Builder()

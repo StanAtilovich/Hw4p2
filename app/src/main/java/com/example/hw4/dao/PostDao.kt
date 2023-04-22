@@ -2,28 +2,26 @@ package com.example.hw4.dao
 
 
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
+import com.example.hw4.entity.AttachmentType
 import com.example.hw4.entity.PostEntity
 import kotlinx.coroutines.flow.Flow
 
 
 @Dao
 interface PostDao {
-   @Query("SELECT * FROM PostEntity WHERE hidden = 0 ORDER BY id DESC") //("SELECT * FROM PostEntity ORDER BY id DESC")
-  fun getAll(): Flow<List<PostEntity>>
+    @Query("SELECT * FROM PostEntity WHERE hidden = 0 ORDER BY id DESC") //("SELECT * FROM PostEntity ORDER BY id DESC")
+    fun getAll(): Flow<List<PostEntity>>
 
-   @Query("SELECT * FROM PostEntity WHERE hidden = 0 ORDER BY id DESC") //"SELECT * FROM PostEntity WHERE hidden = 0 ORDER BY id DESC"
-   fun getVisible(): Flow<List<PostEntity>>
+    @Query("SELECT * FROM PostEntity WHERE hidden = 0 ORDER BY id DESC") //"SELECT * FROM PostEntity WHERE hidden = 0 ORDER BY id DESC"
+    fun getVisible(): Flow<List<PostEntity>>
 
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-  suspend  fun insert(post: PostEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-  suspend  fun insert(posts: List<PostEntity>)
+    suspend  fun insert(post: PostEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend  fun insert(posts: List<PostEntity>)
 
 
     @Query("DELETE FROM PostEntity WHERE id = :id")
@@ -46,4 +44,11 @@ interface PostDao {
 
 
 
+}
+
+class Converters {
+    @TypeConverter
+    fun toAttachmentType(value: String) = enumValueOf<AttachmentType>(value)
+    @TypeConverter
+    fun fromAttachmentType(value: AttachmentType) = value.name
 }

@@ -1,13 +1,14 @@
-package com.example.hw4.viewModel
+
 
 import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.*
-import com.example.hw4.DTO.PhotoModel
+import com.example.hw4.DTO.MediaUpload
 import com.example.hw4.DTO.Post
 import com.example.hw4.db.AppDb
 import com.example.hw4.model.FeedModel
 import com.example.hw4.model.FeedModelState
+import com.example.hw4.model.PhotoModel
 import com.example.hw4.repository.PostRepository
 import com.example.hw4.repository.PostRepositoryImpl
 import com.example.hw4.util.SingleLiveEvent
@@ -34,7 +35,7 @@ private val empty = Post(
     attachment = null,
     hidden = false
 )
-private val noPhoto = PhotoModel(null, null)
+private val noPhoto = PhotoModel()
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -48,14 +49,14 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     val newerCount: LiveData<Int> = data.switchMap {
         repository.getNewerCount(it.posts.firstOrNull()?.id ?: 0)
-            .catch { e -> _dataState.postValue(FeedModelState(error = true)) }
+            .catch { _dataState.postValue(FeedModelState(error = true)) }
             .asLiveData(Dispatchers.Default)
     }
 
     val dataState: LiveData<FeedModelState>
         get() = _dataState
 
-    val edited = MutableLiveData(empty)
+   val edited = MutableLiveData(empty)
     private val _postCreated = SingleLiveEvent<Unit>()
     val postCreated: LiveData<Unit>
         get() = _postCreated
@@ -122,7 +123,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                     when(_photo.value){
                         noPhoto -> repository.save(it)
                         else -> _photo.value?.file?.let {
-                            file -> repository.saveWithAttachment(it, file)
+                                file -> repository.saveWithAttachment(it, MediaUpload(file))
                         }
                     }
                     _dataState.value = FeedModelState()
@@ -132,6 +133,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
         edited.value = empty
+        _photo.value = noPhoto
     }
 
     fun edit(post: Post) {
@@ -179,5 +181,4 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
 
 }
-
 
