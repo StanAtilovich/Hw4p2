@@ -1,5 +1,3 @@
-
-
 import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.*
@@ -56,7 +54,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     val dataState: LiveData<FeedModelState>
         get() = _dataState
 
-   val edited = MutableLiveData(empty)
+    val edited = MutableLiveData(empty)
     private val _postCreated = SingleLiveEvent<Unit>()
     val postCreated: LiveData<Unit>
         get() = _postCreated
@@ -120,10 +118,10 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             _postCreated.postValue(Unit)
             viewModelScope.launch {
                 try {
-                    when(_photo.value){
+                    when (_photo.value) {
                         noPhoto -> repository.save(it)
-                        else -> _photo.value?.file?.let {
-                                file -> repository.saveWithAttachment(it, MediaUpload(file))
+                        else -> _photo.value?.file?.let { file ->
+                            repository.saveWithAttachment(it, MediaUpload(file))
                         }
                     }
                     _dataState.value = FeedModelState()
@@ -154,7 +152,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
 
     fun changePhoto(uri: Uri?, file: File?) {
-        _photo.value = PhotoModel(uri, null)
+        _photo.value = PhotoModel(uri, file)
     }
 
     fun deletePhoto() {

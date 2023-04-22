@@ -28,7 +28,7 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
     override suspend fun likedById(id: Long) {
         try {
             dao.likeById(id)
-            val response = PostsApi.retrofitService.likedById(id)
+            val response = PostsApi.service.likedById(id)
             if (!response.isSuccessful) {
                 throw ApiException(response.code(), response.message())
             }
@@ -42,7 +42,7 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
     override suspend fun unliked(id: Long) {
         try {
             dao.likeById(id)
-            val response = PostsApi.retrofitService.unlikedByIdAsync(id)
+            val response = PostsApi.service.unlikedByIdAsync(id)
             if (!response.isSuccessful) {
                 throw ApiException(response.code(), response.message())
             }
@@ -56,7 +56,7 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
     override fun getNewerCount(id: Long): Flow<Int> = flow {
         while (true) {
             delay(10000L)
-            val response = PostsApi.retrofitService.getNewer(id)
+            val response = PostsApi.service.getNewer(id)
             if (!response.isSuccessful) {
                 throw ApiException(response.code(), response.message())
             }
@@ -97,7 +97,7 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
             val data = MultipartBody.Part.createFormData(
                 "file", upload.file.name, upload.file.asRequestBody()
             )
-            val response = PostsApi.retrofitService.upload(data)
+            val response = PostsApi.service.upload(data)
             if (!response.isSuccessful) {
                 throw ApiException(response.code(), response.message())
             }
@@ -114,7 +114,7 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
 
     override suspend fun save(post: Post) {
         try {
-            val response = PostsApi.retrofitService.save(post)
+            val response = PostsApi.service.save(post)
             if (!response.isSuccessful) {
                 throw ApiException(response.code(), response.message())
             }
@@ -132,7 +132,7 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
     override suspend fun removeById(id: Long) {
         try {
             dao.removeById(id)
-            val response = PostsApi.retrofitService.removeById(id)
+            val response = PostsApi.service.removeById(id)
             if (!response.isSuccessful) {
                 throw ApiException(response.code(), response.message())
             }
@@ -147,7 +147,7 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
 
     override suspend fun getAll() {
         try {
-            val response = PostsApi.retrofitService.getAll()
+            val response = PostsApi.service.getAll()
             if (!response.isSuccessful) {
                 throw ApiException(response.code(), response.message())
             }

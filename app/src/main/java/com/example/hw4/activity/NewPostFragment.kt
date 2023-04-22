@@ -30,6 +30,7 @@ class NewPostFragment : Fragment() {
         var Bundle.textArg: String? by StringArg
     }
 
+
     private val viewModel: PostViewModel by viewModels(
         ownerProducer = ::requireParentFragment
     )
@@ -64,6 +65,12 @@ class NewPostFragment : Fragment() {
             }
         }
 
+        viewModel.postCreated.observe(viewLifecycleOwner) {
+            viewModel.loadPosts()
+            findNavController().navigateUp()
+
+        }
+
         viewModel.photo.observe(viewLifecycleOwner){
             binding.photo.setImageURI(it.uri)
             binding.photoContainer.isVisible = it.uri !=null
@@ -92,39 +99,34 @@ class NewPostFragment : Fragment() {
 
 
         binding.edit.requestFocus()
-        // binding.ok.setOnClickListener {
-        //     viewModel.changeContent(binding.edit.text.toString())
-        //     viewModel.save()
-        //     AndroidUtils.hideKeyboard(requireView())
-        //     binding.ok.visibility = View.INVISIBLE
-        //     binding.bottomAppBar.visibility = View.INVISIBLE
-        //  }
+
+
+
+
         activity?.addMenuProvider(object :MenuProvider{
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.menu_new_post,menu)
             }
 
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return when(menuItem.itemId){
-                    R.id.ok-> {
-                        viewModel.changeContent(binding.edit.text.toString())
-                        viewModel.save()
-                        AndroidUtils.hideKeyboard(requireView())
-                        true
-                    }
-                    else -> false
-                }
-            }
-
-        }, viewLifecycleOwner)
 
 
+          override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+              return when(menuItem.itemId){
+                  R.id.ok-> {
+                      viewModel.save()
 
-        viewModel.postCreated.observe(viewLifecycleOwner) {
-            viewModel.loadPosts()
-            findNavController().navigateUp()
+                      viewModel.changeContent(binding.edit.text.toString())
 
-        }
+                      AndroidUtils.hideKeyboard(requireView())
+                      true
+                  }
+                  else -> false
+              }
+          }
+    }, viewLifecycleOwner)
+
+
+
         return binding.root
 
 
