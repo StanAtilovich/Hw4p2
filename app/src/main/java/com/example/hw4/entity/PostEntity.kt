@@ -68,7 +68,7 @@ data class PostEntity(
 }
     class AttachmentEmbeddable (
         var url: String,
-        var type: AttachmentType?
+        var type: AttachmentType
             ){
         fun toDto() = Attachment(url, type)
         companion object{

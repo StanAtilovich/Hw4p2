@@ -22,6 +22,7 @@ interface OnInteractionListener {
     fun onEdit(post: Post) {}
     fun onplayVideo(post: Post) {}
     fun onPostClick(post: Post) {}
+    fun PhotoClick(post: Post){}
 }
 
 class PostAdapter(
@@ -61,7 +62,7 @@ class PostViewHolder(
 
 
             val url = "http://10.0.2.2:9999/avatars/${post.authorAvatar}"
-            val urlAttachment = "http://10.0.2.2:9999/attachment/${post.attachment?.url}"
+            val urlAttachment = "http://10.0.2.2:9999/media/${post.attachment?.url}"
             if (post.authorAvatar == "") {
                 avatar.setImageResource(R.drawable.ic_baseline_add_a_photo_24)
             } else {
@@ -82,8 +83,10 @@ class PostViewHolder(
                     .error(R.drawable.ic_baseline_error_24)
                     .timeout(10_000)
                     .into(binding.attachment)
-                attachment.isVisible = false//nnn
+                attachment.isVisible = true//nnn
             }
+
+
 
 
 
@@ -117,6 +120,9 @@ class PostViewHolder(
             }
             binding.root.setOnClickListener {
                 onInteractionListener.onPostClick(post)
+            }
+            binding.attachment.setOnClickListener{
+                onInteractionListener.PhotoClick(post)
             }
 
         }

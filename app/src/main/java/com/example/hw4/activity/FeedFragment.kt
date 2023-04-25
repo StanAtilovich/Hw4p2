@@ -18,6 +18,7 @@ import com.example.hw4.util.AndroidUtils
 import com.example.hw4.DTO.Post
 import com.example.hw4.R
 import com.example.hw4.activity.NewPostFragment.Companion.textArg
+
 import com.example.hw4.adapter.OnInteractionListener
 import com.example.hw4.adapter.PostAdapter
 import com.example.hw4.databinding.FragmentFeedBinding
@@ -47,14 +48,14 @@ class FeedFragment : Fragment() {
                 viewModel.likeById(post.id)
             }
 
-            override fun onPostClick(post: Post) {
-                findNavController().navigate(
-                    R.id.action_feedFragment_to_onePostFragment,
-                    Bundle().apply {
-                        textArg = post.id.toString()
-                    })
-                viewModel.edit(post)
-            }
+           override fun PhotoClick(post: Post) { //onPostClick
+               findNavController().navigate(
+                   R.id.action_feedFragment_to_photo,
+                   Bundle().apply {
+                       textArg = post.attachment?.url
+                   })
+               viewModel.edit(post)
+           }
 
             override fun onRemove(post: Post) {
                 viewModel.removeById(post.id)
@@ -64,7 +65,7 @@ class FeedFragment : Fragment() {
                 findNavController().navigate(
                     R.id.action_feedFragment_to_newPostFragment,
                     Bundle().apply {
-                        textArg = post.content
+                        textArg = post.attachment?.url
                     })
                 viewModel.edit(post)
 
@@ -112,7 +113,7 @@ class FeedFragment : Fragment() {
 
         binding.newerCount.setOnClickListener {
             viewModel.readAll()
-            binding.newerCount.isVisible =false
+            binding.newerCount.isVisible = false
         }
 
         binding.swipeRefreshLayout.setOnRefreshListener {
