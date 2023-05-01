@@ -12,6 +12,7 @@ data class PostEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val author: String,
+    val authorId : Long,
     val content: String,
     val published:String,
     val likedByMe: Boolean,
@@ -29,6 +30,7 @@ data class PostEntity(
     ) {
     fun toDto() = Post(
         id,
+        authorId,
         author,
         content,
         published,
@@ -49,6 +51,7 @@ data class PostEntity(
             PostEntity(
                 dto.id,
                 dto.author,
+                dto.authorId,
                 dto.content,
                 dto.published,
                 dto.likedByMe,

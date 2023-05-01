@@ -24,6 +24,12 @@
         <action
             android:id="@+id/action_feedFragment_to_photo"
             app:destination="@id/photo" />
+        <action
+            android:id="@+id/action_feedFragment_to_singInFragment"
+            app:destination="@id/singInFragment" />
+        <action
+            android:id="@+id/action_feedFragment_to_singUpFragment"
+            app:destination="@id/singUpFragment" />
     </fragment>
     <fragment
         android:id="@+id/photo"
@@ -45,4 +51,12 @@
             android:id="@+id/action_onePostFragment_to_newPostFragment"
             app:destination="@id/newPostFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/singInFragment"
+        android:name="com.example.hw4.activity.SingInFragment"
+        android:label="SingInFragment" />
+    <fragment
+        android:id="@+id/singUpFragment"
+        android:name="com.example.hw4.activity.SingUpFragment"
+        android:label="SingUpFragment" />
 </navigation>

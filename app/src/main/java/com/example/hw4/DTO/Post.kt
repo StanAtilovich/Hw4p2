@@ -7,6 +7,7 @@ import java.io.File
 
 data class Post(
     val id: Long,
+    val authorId: Long,
     val author: String,
     val content: String,
     val published: String,
@@ -20,6 +21,7 @@ data class Post(
     val authorAvatar: String,
     val hidden: Boolean,
     val attachment: Attachment? = null,
+    val ownedByMe: Boolean = false,
 )
 data class MediaUpload(val file: File)
 data class Media(val id: String)

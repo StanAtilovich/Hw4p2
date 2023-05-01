@@ -1,6 +1,7 @@
 import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.*
+import auth.AppAuth
 import com.example.hw4.DTO.MediaUpload
 import com.example.hw4.DTO.Post
 import com.example.hw4.db.AppDb
@@ -11,7 +12,9 @@ import com.example.hw4.repository.PostRepository
 import com.example.hw4.repository.PostRepositoryImpl
 import com.example.hw4.util.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.io.File
@@ -19,6 +22,7 @@ import java.io.File
 
 private val empty = Post(
     id = 0,
+    authorId = 0L,
     content = "",
     author = "",
     likedByMe = false,
@@ -41,8 +45,16 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: PostRepository =
         PostRepositoryImpl(AppDb.getInstance(application).postDao())
     private val _dataState = MutableLiveData(FeedModelState())
-    val data: LiveData<FeedModel> = repository.data
-        .map { FeedModel(it, it.isEmpty()) }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val data: LiveData<FeedModel> = AppAuth.getInstance().data.flatMapLatest { authState ->
+        repository.data
+        .map {posts ->
+            FeedModel(posts.map {
+                it.copy(ownedByMe = authState?.id == it.authorId)
+            }, posts.isEmpty())
+        }
+    }
         .asLiveData(Dispatchers.Default)
 
     val newerCount: LiveData<Int> = data.switchMap {

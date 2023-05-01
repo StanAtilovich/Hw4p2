@@ -34,4 +34,19 @@
     <string name="description_take_photo">Сделать фото</string>
     <string name="description_photo">Фото</string>
     <string name="remove">Удалить</string>
+    <string name="login">Войти в учетную запись</string>
+    <string name="register">регистрация</string>
+    <string name="logout">Выйти</string>
+    <string name="sign_in_name">Вход в учетную запись</string>
+    <string name="loginText">Введите имя</string>
+    <string name="sign_in_button">Вход</string>
+    <string name="password">Пароль</string>
+    <string name="sign_name">Имя пользователя</string>
+    <string name="sign_up_name">Регистрация</string>
+    <string name="repeat_enter_password">повторите заного</string>
+    <string name="sign_up_button">Вход</string>
+    <string name="youDidIt">авторитизирован</string>
+    <string name="password_error">Неверный пароль</string>
+    <string name="error">опасноть, ошибка</string>
+    <string name="pushed_button">кнопка нажата</string>
 </resources>
