@@ -80,4 +80,3 @@ interface PostsApiService {
     suspend fun registration(@Field("login") login: String, @Field("pass") pass: String,@Field("name") name: String): Response<User>
 
 }
-

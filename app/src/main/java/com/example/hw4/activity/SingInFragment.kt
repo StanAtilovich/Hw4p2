@@ -33,7 +33,7 @@ class SingInFragment: Fragment() {
         }
 
         viewModel.state.observe(viewLifecycleOwner){
-            state ->
+                state ->
             if (state.loginError){
                 binding.password.error = getString(R.string.password_error)
             }

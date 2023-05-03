@@ -14,7 +14,7 @@ class AppAuth private constructor(context: Context){
 
     private val _data: MutableStateFlow<AuthModel?>
     init {
-val token = prefs.getString(TOKEN_KEY, null)
+        val token = prefs.getString(TOKEN_KEY, null)
         val id = prefs.getLong(ID_KEY, 0L)
         if (token == null || id == 0L){
             _data = MutableStateFlow(null)!!

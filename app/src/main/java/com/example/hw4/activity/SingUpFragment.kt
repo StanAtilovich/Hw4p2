@@ -26,34 +26,34 @@ class SingUpFragment : Fragment() {
         val binding = SignUpBinding.inflate(inflater, container, false)
 
         viewModel.data.observe(viewLifecycleOwner) {
-                AppAuth.getInstance().setAuth(it.id, it.token)
-                findNavController().navigateUp()
-            }
+            AppAuth.getInstance().setAuth(it.id, it.token)
+            findNavController().navigateUp()
+        }
 
-            viewModel.state.observe(viewLifecycleOwner) { state ->
-                if (state.registrationError)
-                    Snackbar.make(binding.root, R.string.error_loading, LENGTH_INDEFINITE)
-                        .setAction(R.string.retry_loading) {
-                            viewModel.registration(
-                                binding.login.text.toString(),
-                                binding.password.text.toString(),
-                                binding.name.text.toString()
-                            )
-                        }.show()
-            }
-            with(binding) {
-                signUpButton.setOnClickListener {
-                    if (password.text.toString() == repeatPassword.text.toString()) {
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            if (state.registrationError)
+                Snackbar.make(binding.root, R.string.error_loading, LENGTH_INDEFINITE)
+                    .setAction(R.string.retry_loading) {
                         viewModel.registration(
-                            login.text.toString(),
-                            password.text.toString(),
-                            name.text.toString()
+                            binding.login.text.toString(),
+                            binding.password.text.toString(),
+                            binding.name.text.toString()
                         )
-                    } else {
-                        repeatPassword.error = getString(R.string.password_error)
-                    }
+                    }.show()
+        }
+        with(binding) {
+            signUpButton.setOnClickListener {
+                if (password.text.toString() == repeatPassword.text.toString()) {
+                    viewModel.registration(
+                        login.text.toString(),
+                        password.text.toString(),
+                        name.text.toString()
+                    )
+                } else {
+                    repeatPassword.error = getString(R.string.password_error)
                 }
             }
+        }
 
         return binding.root
     }

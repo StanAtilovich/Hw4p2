@@ -58,18 +58,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
                     when (menuItem.itemId) {
-                        //  R.id.logout, R.id.register -> {
-                        //      //TODO remove hw
-                        //      AppAuth.getInstance().setAuth(5, "x-token")
-                        //      true
-                        //  }
 
-                        //  R.id.logout -> {
-                        //      AppAuth.getInstance().removeAuth()
-                        //      true
-                        //  }
-
-                        //  else -> false
 
                         R.id.singIn -> {
                             findNavController(R.id.nav_host_fragment).navigate(R.id.action_feedFragment_to_singInFragment)
@@ -77,7 +66,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
                         }
 
                         R.id.SingUp -> {
-                            //AppAuth.getInstance().setAuth(5, "x-token")
+
                             findNavController(R.id.nav_host_fragment).navigate(R.id.action_feedFragment_to_singUpFragment)
                             true
                         }
@@ -86,7 +75,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
                             AppAuth.getInstance().removeAuth()
                             true
                         }
-                        else -> {onMenuItemSelected(menuItem)}
+                        else -> false//{onMenuItemSelected(menuItem)}
                     }
 
 

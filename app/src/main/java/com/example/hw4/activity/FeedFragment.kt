@@ -15,6 +15,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import auth.AppAuth
 import com.example.hw4.util.AndroidUtils
 import com.example.hw4.DTO.Post
 import com.example.hw4.R
@@ -33,6 +34,8 @@ import kotlin.coroutines.EmptyCoroutineContext
 
 
 class FeedFragment : Fragment() {
+
+    lateinit var auth: AppAuth
     private val viewModel: PostViewModel by activityViewModels()
 
     private val viewModelAuth: AuthViewModel by viewModels(ownerProducer = ::requireParentFragment)
@@ -49,29 +52,42 @@ class FeedFragment : Fragment() {
 
         val adapter = PostAdapter(object : OnInteractionListener {
             override fun onLike(post: Post) {
-                viewModel.likeById(post.id)
+                if (viewModelAuth.authorized) {
+                    viewModel.likeById(post.id)
+                } else {
+                    authenticate()
+                }
             }
 
-           override fun PhotoClick(post: Post) { //onPostClick
-               findNavController().navigate(
-                   R.id.action_feedFragment_to_photo,
-                   Bundle().apply {
-                       textArg = post.attachment?.url
-                   })
-               viewModel.edit(post)
-           }
-            override fun onRemove(post: Post) {
-                viewModel.removeById(post.id)
-            }
-
-            override fun onEdit(post: Post) {
+            override fun PhotoClick(post: Post) { //onPostClick
                 findNavController().navigate(
-                    R.id.action_feedFragment_to_newPostFragment,
+                    R.id.action_feedFragment_to_photo,
                     Bundle().apply {
                         textArg = post.attachment?.url
                     })
                 viewModel.edit(post)
+            }
 
+            override fun onRemove(post: Post) {
+                if (viewModelAuth.authorized) {
+                    viewModel.removeById(post.id)
+                } else {
+                    authenticate()
+                }
+            }
+
+            override fun onEdit(post: Post) {
+                if (viewModelAuth.authorized) {
+                    viewModel.edit(post)
+                    findNavController().navigate(
+                        R.id.action_feedFragment_to_newPostFragment,
+                        Bundle().apply {
+                            textArg = post.attachment?.url
+                        })
+
+                } else {
+                    authenticate()
+                }
             }
 
             @SuppressLint("QueryPermissionsNeeded")
@@ -165,5 +181,6 @@ class FeedFragment : Fragment() {
 
     }
 
-    private fun authenticate() = findNavController().navigate(R.id.action_feedFragment_to_singInFragment)
+    private fun authenticate() =
+        findNavController().navigate(R.id.action_feedFragment_to_singInFragment)
 }

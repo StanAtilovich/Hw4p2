@@ -15,8 +15,8 @@ import com.example.hw4.util.LongArg
 
 class PhotoView: Fragment() {
     companion object{
-    var Bundle.textArg: String? by LongArg
-}
+        var Bundle.textArg: String? by LongArg
+    }
 
 
     override fun onCreateView(

@@ -49,11 +49,11 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     @OptIn(ExperimentalCoroutinesApi::class)
     val data: LiveData<FeedModel> = AppAuth.getInstance().data.flatMapLatest { authState ->
         repository.data
-        .map {posts ->
-            FeedModel(posts.map {
-                it.copy(ownedByMe = authState?.id == it.authorId)
-            }, posts.isEmpty())
-        }
+            .map {posts ->
+                FeedModel(posts.map {
+                    it.copy(ownedByMe = authState?.id == it.authorId)
+                }, posts.isEmpty())
+            }
     }
         .asLiveData(Dispatchers.Default)
 
@@ -191,4 +191,3 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
 
 }
-
