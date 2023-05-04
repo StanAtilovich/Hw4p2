@@ -1,5 +1,6 @@
 package com.example.hw4.activity
 
+import NewPostFragment.Companion.textArg
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -11,9 +12,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.navigation.findNavController
 import auth.AppAuth
+
 import com.example.hw4.R
-import com.example.hw4.activity.NewPostFragment.Companion.textArg
+
 import com.example.hw4.viewModel.AuthViewModel
+
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.messaging.FirebaseMessaging
@@ -75,7 +78,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
                             AppAuth.getInstance().removeAuth()
                             true
                         }
-                        else -> false//{onMenuItemSelected(menuItem)}
+                        else -> {onMenuItemSelected(menuItem)}
                     }
 
 

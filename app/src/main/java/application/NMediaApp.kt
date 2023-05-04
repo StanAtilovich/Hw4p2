@@ -1,3 +1,5 @@
+package application
+
 import android.app.Application
 import auth.AppAuth
 

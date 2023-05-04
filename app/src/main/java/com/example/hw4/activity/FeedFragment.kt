@@ -1,6 +1,5 @@
 package com.example.hw4.activity
 
-
 import PostViewModel
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -15,17 +14,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import auth.AppAuth
-import com.example.hw4.util.AndroidUtils
 import com.example.hw4.DTO.Post
 import com.example.hw4.R
-import com.example.hw4.activity.NewPostFragment.Companion.textArg
-
+import com.example.hw4.activity.PhotoView.Companion.textArg
 import com.example.hw4.adapter.OnInteractionListener
 import com.example.hw4.adapter.PostAdapter
 import com.example.hw4.databinding.FragmentFeedBinding
+import com.example.hw4.util.AndroidUtils
 import com.example.hw4.viewModel.AuthViewModel
-
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -34,11 +30,9 @@ import kotlin.coroutines.EmptyCoroutineContext
 
 
 class FeedFragment : Fragment() {
-
-    lateinit var auth: AppAuth
     private val viewModel: PostViewModel by activityViewModels()
 
-    private val viewModelAuth: AuthViewModel by viewModels(ownerProducer = ::requireParentFragment)
+         private val viewModelAuth: AuthViewModel by viewModels(ownerProducer = ::requireParentFragment)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -52,11 +46,7 @@ class FeedFragment : Fragment() {
 
         val adapter = PostAdapter(object : OnInteractionListener {
             override fun onLike(post: Post) {
-                if (viewModelAuth.authorized) {
-                    viewModel.likeById(post.id)
-                } else {
-                    authenticate()
-                }
+                viewModel.likeById(post.id)
             }
 
             override fun PhotoClick(post: Post) { //onPostClick
@@ -67,27 +57,18 @@ class FeedFragment : Fragment() {
                     })
                 viewModel.edit(post)
             }
-
             override fun onRemove(post: Post) {
-                if (viewModelAuth.authorized) {
-                    viewModel.removeById(post.id)
-                } else {
-                    authenticate()
-                }
+                viewModel.removeById(post.id)
             }
 
             override fun onEdit(post: Post) {
-                if (viewModelAuth.authorized) {
-                    viewModel.edit(post)
-                    findNavController().navigate(
-                        R.id.action_feedFragment_to_newPostFragment,
-                        Bundle().apply {
-                            textArg = post.attachment?.url
-                        })
+                findNavController().navigate(
+                    R.id.action_feedFragment_to_newPostFragment,
+                    Bundle().apply {
+                        textArg = post.attachment?.url
+                    })
+                viewModel.edit(post)
 
-                } else {
-                    authenticate()
-                }
             }
 
             @SuppressLint("QueryPermissionsNeeded")
@@ -180,7 +161,5 @@ class FeedFragment : Fragment() {
         return binding.root
 
     }
-
-    private fun authenticate() =
-        findNavController().navigate(R.id.action_feedFragment_to_singInFragment)
+    private fun authenticate() = findNavController().navigate(R.id.action_feedFragment_to_singInFragment)
 }

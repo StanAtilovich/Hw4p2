@@ -2,6 +2,7 @@ import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.*
 import auth.AppAuth
+
 import com.example.hw4.DTO.MediaUpload
 import com.example.hw4.DTO.Post
 import com.example.hw4.db.AppDb
@@ -35,7 +36,9 @@ private val empty = Post(
     video = null,
     authorAvatar = "",
     attachment = null,
-    hidden = false
+    hidden = false,
+    ownedByMe = false,
+
 )
 private val noPhoto = PhotoModel()
 
