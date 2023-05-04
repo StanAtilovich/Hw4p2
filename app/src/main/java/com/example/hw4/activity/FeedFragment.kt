@@ -32,7 +32,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 class FeedFragment : Fragment() {
     private val viewModel: PostViewModel by activityViewModels()
 
-         private val viewModelAuth: AuthViewModel by viewModels(ownerProducer = ::requireParentFragment)
+    private val viewModelAuth: AuthViewModel by viewModels(ownerProducer = ::requireParentFragment)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,7 +46,11 @@ class FeedFragment : Fragment() {
 
         val adapter = PostAdapter(object : OnInteractionListener {
             override fun onLike(post: Post) {
-                viewModel.likeById(post.id)
+                if (viewModelAuth.authorized) {
+                    viewModel.likeById(post.id)
+                } else {
+                    authenticate()
+                }
             }
 
             override fun PhotoClick(post: Post) { //onPostClick
@@ -57,17 +61,28 @@ class FeedFragment : Fragment() {
                     })
                 viewModel.edit(post)
             }
+
             override fun onRemove(post: Post) {
-                viewModel.removeById(post.id)
+                if (viewModelAuth.authorized) {
+                    viewModel.removeById(post.id)
+                } else {
+                    authenticate()
+                }
             }
 
             override fun onEdit(post: Post) {
-                findNavController().navigate(
-                    R.id.action_feedFragment_to_newPostFragment,
-                    Bundle().apply {
-                        textArg = post.attachment?.url
-                    })
-                viewModel.edit(post)
+                if (viewModelAuth.authorized) {
+                    viewModel.edit(post)
+
+                    findNavController().navigate(
+                        R.id.action_feedFragment_to_newPostFragment,
+                        Bundle().apply {
+                            textArg = post.attachment?.url
+                        })
+                } else {
+                    authenticate()
+                }
+
 
             }
 
@@ -156,10 +171,16 @@ class FeedFragment : Fragment() {
 
 
         binding.fab.setOnClickListener {
-            findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
+            if (viewModelAuth.authorized) {
+                findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
+            }else{
+                authenticate()
+            }
         }
         return binding.root
 
     }
-    private fun authenticate() = findNavController().navigate(R.id.action_feedFragment_to_singInFragment)
+
+    private fun authenticate() =
+        findNavController().navigate(R.id.action_feedFragment_to_singInFragment)
 }

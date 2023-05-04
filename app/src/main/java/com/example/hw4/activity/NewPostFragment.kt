@@ -1,11 +1,11 @@
+package com.example.hw4.activity
 
-
-
+import PostViewModel
 import android.app.Activity
 import android.os.Bundle
 import android.view.*
 import androidx.activity.result.ActivityResult
-
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toFile
 
@@ -22,7 +22,7 @@ import com.example.hw4.util.StringArg
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.snackbar.Snackbar
 import kotlin.contracts.ExperimentalContracts
-
+import kotlin.contracts.contract
 
 
 class NewPostFragment : Fragment() {

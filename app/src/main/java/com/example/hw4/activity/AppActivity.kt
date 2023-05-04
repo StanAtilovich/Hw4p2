@@ -1,6 +1,6 @@
 package com.example.hw4.activity
 
-import NewPostFragment.Companion.textArg
+
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -14,6 +14,7 @@ import androidx.navigation.findNavController
 import auth.AppAuth
 
 import com.example.hw4.R
+import com.example.hw4.activity.NewPostFragment.Companion.textArg
 
 import com.example.hw4.viewModel.AuthViewModel
 
@@ -78,7 +79,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
                             AppAuth.getInstance().removeAuth()
                             true
                         }
-                        else -> {onMenuItemSelected(menuItem)}
+                        else -> false//{onMenuItemSelected(menuItem)}
                     }
 
 
