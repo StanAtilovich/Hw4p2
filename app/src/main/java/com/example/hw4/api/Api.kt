@@ -5,6 +5,7 @@ import auth.AppAuth
 import com.example.hw4.BuildConfig
 import com.example.hw4.DTO.Media
 import com.example.hw4.DTO.Post
+import com.example.hw4.DTO.PushToken
 import com.example.hw4.DTO.User
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -12,7 +13,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import retrofit2.http.*
 
 
@@ -45,12 +45,12 @@ private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .build()
 
-object PostsApi {
-    val service: PostsApiService by lazy {
-        retrofit.create(PostsApiService::class.java)
+object Api {
+    val service: ApiService by lazy {
+        retrofit.create(ApiService::class.java)
     }
 }
-interface PostsApiService {
+interface ApiService {
     @GET("posts")
     suspend fun getAll(): Response<List<Post>>
 
@@ -79,5 +79,8 @@ interface PostsApiService {
     @FormUrlEncoded
     @POST("users/registration")
     suspend fun registration(@Field("login") login: String, @Field("pass") pass: String,@Field("name") name: String): Response<User>
+
+    @POST("users/push-tokens")
+    suspend fun saveToken(@Body token: PushToken):Response<Unit>
 
 }

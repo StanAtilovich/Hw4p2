@@ -26,7 +26,3 @@ data class Post(
 data class MediaUpload(val file: File)
 data class Media(val id: String)
 
-
-
-
-
