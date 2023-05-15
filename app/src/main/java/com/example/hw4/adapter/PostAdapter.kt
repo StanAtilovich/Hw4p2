@@ -1,8 +1,8 @@
 package com.example.hw4.adapter
 
-
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.core.view.isVisible
@@ -22,6 +22,7 @@ interface OnInteractionListener {
     fun onEdit(post: Post) {}
     fun onplayVideo(post: Post) {}
     fun onPostClick(post: Post) {}
+    fun PhotoClick(post: Post) {}
 }
 
 class PostAdapter(
@@ -52,7 +53,7 @@ class PostViewHolder(
             published.text = post.published
             content.text = post.content
             likes.isChecked = post.likedByMe
-            likes.text =  "${post.likes}"
+            likes.text = "${post.likes}"
             shares.isChecked = post.shareByMe
             shares.text = post.shareCount.toString()
             views.isChecked = post.viewByMe
@@ -61,7 +62,7 @@ class PostViewHolder(
 
 
             val url = "http://10.0.2.2:9999/avatars/${post.authorAvatar}"
-            val urlAttachment = "http://10.0.2.2:9999/attachment/${post.attachment?.url}"
+            val urlAttachment = "http://10.0.2.2:9999/media/${post.attachment?.url}"
             if (post.authorAvatar == "") {
                 avatar.setImageResource(R.drawable.ic_baseline_add_a_photo_24)
             } else {
@@ -82,24 +83,29 @@ class PostViewHolder(
                     .error(R.drawable.ic_baseline_error_24)
                     .timeout(10_000)
                     .into(binding.attachment)
-                attachment.isVisible = false//nnn
+                attachment.isVisible = true//nnn
             }
 
 
 
+            menu.visibility = if (post.ownedByMe) View.VISIBLE else View.INVISIBLE
+
             menu.setOnClickListener {
                 PopupMenu(it.context, it).apply {
                     inflate(R.menu.post_menu)
+                    menu.setGroupVisible(R.id.owned,post.ownedByMe)
                     setOnMenuItemClickListener { item ->
                         when (item.itemId) {
                             R.id.remove -> {
                                 onInteractionListener.onRemove(post)
                                 true
                             }
+
                             R.id.edit -> {
                                 onInteractionListener.onEdit(post)
                                 true
                             }
+
                             else -> false
                         }
                     }
@@ -117,6 +123,9 @@ class PostViewHolder(
             }
             binding.root.setOnClickListener {
                 onInteractionListener.onPostClick(post)
+            }
+            binding.attachment.setOnClickListener {
+                onInteractionListener.PhotoClick(post)
             }
 
         }

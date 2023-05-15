@@ -1,13 +1,17 @@
 package com.example.hw4.activity
 
+import PostViewModel
 import android.app.Activity
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toFile
-
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -17,13 +21,13 @@ import com.example.hw4.R
 import com.example.hw4.databinding.FragmentNewPostBinding
 import com.example.hw4.util.AndroidUtils
 import com.example.hw4.util.StringArg
-import com.example.hw4.viewModel.PostViewModel
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.contract
 
 
+@AndroidEntryPoint
 class NewPostFragment : Fragment() {
     companion object {
         var Bundle.textArg: String? by StringArg
@@ -48,19 +52,25 @@ class NewPostFragment : Fragment() {
         arguments?.textArg?.let(binding.edit::setText)
 
         val startForProfileImageResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            result: ActivityResult ->
+                result: ActivityResult ->
             val resultCode = result.resultCode
             val data = result.data
 
             when (resultCode){
                 ImagePicker.RESULT_ERROR -> Snackbar.make(binding.root,
-                ImagePicker.getError(data), Snackbar.LENGTH_SHORT).show()
+                    ImagePicker.getError(data), Snackbar.LENGTH_SHORT).show()
                 Activity.RESULT_OK -> {
                     val fileUri = data?.data
 
                     viewModel.changePhoto(fileUri, fileUri?.toFile())
                 }
             }
+        }
+
+        viewModel.postCreated.observe(viewLifecycleOwner) {
+            viewModel.loadPosts()
+            findNavController().navigateUp()
+
         }
 
         viewModel.photo.observe(viewLifecycleOwner){
@@ -90,18 +100,17 @@ class NewPostFragment : Fragment() {
         }
 
 
-            binding.edit.requestFocus()
-      // binding.ok.setOnClickListener {
-      //     viewModel.changeContent(binding.edit.text.toString())
-      //     viewModel.save()
-      //     AndroidUtils.hideKeyboard(requireView())
-      //     binding.ok.visibility = View.INVISIBLE
-      //     binding.bottomAppBar.visibility = View.INVISIBLE
-      //  }
-        activity?.addMenuProvider(object :MenuProvider{
+        binding.edit.requestFocus()
+
+
+
+
+        activity?.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.menu_new_post,menu)
             }
+
+
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when(menuItem.itemId){
@@ -114,16 +123,10 @@ class NewPostFragment : Fragment() {
                     else -> false
                 }
             }
-
         }, viewLifecycleOwner)
 
 
 
-        viewModel.postCreated.observe(viewLifecycleOwner) {
-            viewModel.loadPosts()
-            findNavController().navigateUp()
-
-        }
         return binding.root
 
 

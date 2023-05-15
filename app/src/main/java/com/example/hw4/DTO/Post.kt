@@ -1,12 +1,13 @@
 package com.example.hw4.DTO
 
-import android.net.Uri
+
 import com.example.hw4.entity.Attachment
 import java.io.File
 
 
 data class Post(
     val id: Long,
+    val authorId: Long,
     val author: String,
     val content: String,
     val published: String,
@@ -18,14 +19,10 @@ data class Post(
     val countView: Int,
     val video: String?,
     val authorAvatar: String,
-    val attachment: Attachment? = null,
     val hidden: Boolean,
-    )
-data class PhotoModel(val uri: Uri?, val file: File?)
+    val attachment: Attachment? = null,
+    val ownedByMe: Boolean = false,
+)
+data class MediaUpload(val file: File)
 data class Media(val id: String)
-
-
-
-
-
 

@@ -1,7 +1,5 @@
 package com.example.hw4.error
 
-import android.accounts.NetworkErrorException
-import android.os.Message
 import java.io.IOException
 import java.sql.SQLException
 

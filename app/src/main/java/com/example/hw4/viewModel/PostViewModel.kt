@@ -1,25 +1,32 @@
-package com.example.hw4.viewModel
-
-import android.app.Application
 import android.net.Uri
-import androidx.lifecycle.*
-import com.example.hw4.DTO.PhotoModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.switchMap
+import androidx.lifecycle.viewModelScope
+import com.example.hw4.DTO.MediaUpload
 import com.example.hw4.DTO.Post
-import com.example.hw4.db.AppDb
+import com.example.hw4.auth.AppAuth
 import com.example.hw4.model.FeedModel
 import com.example.hw4.model.FeedModelState
+import com.example.hw4.model.PhotoModel
 import com.example.hw4.repository.PostRepository
-import com.example.hw4.repository.PostRepositoryImpl
 import com.example.hw4.util.SingleLiveEvent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.io.File
+import javax.inject.Inject
 
 
 private val empty = Post(
     id = 0,
+    authorId = 0L,
     content = "",
     author = "",
     likedByMe = false,
@@ -32,23 +39,35 @@ private val empty = Post(
     video = null,
     authorAvatar = "",
     attachment = null,
-    hidden = false
-)
-private val noPhoto = PhotoModel(null, null)
+    hidden = false,
+    ownedByMe = false,
 
-class PostViewModel(application: Application) : AndroidViewModel(application) {
-
-
-    private val repository: PostRepository =
-        PostRepositoryImpl(AppDb.getInstance(application).postDao())
+    )
+private val noPhoto = PhotoModel()
+@OptIn(ExperimentalCoroutinesApi::class)
+@HiltViewModel
+class PostViewModel @Inject constructor(
+    private val repository: PostRepository,
+    appAuth: AppAuth,
+) : ViewModel() {
     private val _dataState = MutableLiveData(FeedModelState())
-    val data: LiveData<FeedModel> = repository.data
-        .map { FeedModel(it, it.isEmpty()) }
+
+
+    val data: LiveData<FeedModel> = appAuth
+        .data
+        .flatMapLatest { authState ->
+            repository.data
+                .map { posts ->
+                    FeedModel(posts.map {
+                        it.copy(ownedByMe = authState?.id == it.authorId)
+                    }, posts.isEmpty())
+                }
+        }
         .asLiveData(Dispatchers.Default)
 
     val newerCount: LiveData<Int> = data.switchMap {
         repository.getNewerCount(it.posts.firstOrNull()?.id ?: 0)
-            .catch { e -> _dataState.postValue(FeedModelState(error = true)) }
+            .catch { _dataState.postValue(FeedModelState(error = true)) }
             .asLiveData(Dispatchers.Default)
     }
 
@@ -119,10 +138,10 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             _postCreated.postValue(Unit)
             viewModelScope.launch {
                 try {
-                    when(_photo.value){
+                    when (_photo.value) {
                         noPhoto -> repository.save(it)
-                        else -> _photo.value?.file?.let {
-                            file -> repository.saveWithAttachment(it, file)
+                        else -> _photo.value?.file?.let { file ->
+                            repository.saveWithAttachment(it, MediaUpload(file))
                         }
                     }
                     _dataState.value = FeedModelState()
@@ -132,6 +151,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
         edited.value = empty
+        _photo.value = noPhoto
     }
 
     fun edit(post: Post) {
@@ -152,7 +172,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
 
     fun changePhoto(uri: Uri?, file: File?) {
-        _photo.value = PhotoModel(uri, null)
+        _photo.value = PhotoModel(uri, file)
     }
 
     fun deletePhoto() {
@@ -179,5 +199,3 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
 
 }
-
-

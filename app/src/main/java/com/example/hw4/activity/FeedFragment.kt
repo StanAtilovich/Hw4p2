@@ -1,6 +1,6 @@
 package com.example.hw4.activity
 
-
+import PostViewModel
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
@@ -11,25 +11,32 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.example.hw4.util.AndroidUtils
 import com.example.hw4.DTO.Post
 import com.example.hw4.R
 import com.example.hw4.activity.NewPostFragment.Companion.textArg
 import com.example.hw4.adapter.OnInteractionListener
 import com.example.hw4.adapter.PostAdapter
 import com.example.hw4.databinding.FragmentFeedBinding
-import com.example.hw4.viewModel.PostViewModel
+import com.example.hw4.util.AndroidUtils
+import com.example.hw4.viewModel.AuthViewModel
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.coroutines.EmptyCoroutineContext
 
 
+@AndroidEntryPoint
 class FeedFragment : Fragment() {
     private val viewModel: PostViewModel by activityViewModels()
+
+    private val viewModelAuth: AuthViewModel by viewModels(
+        ownerProducer = ::requireParentFragment
+    )
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,29 +50,43 @@ class FeedFragment : Fragment() {
 
         val adapter = PostAdapter(object : OnInteractionListener {
             override fun onLike(post: Post) {
-                viewModel.likeById(post.id)
+                if (viewModelAuth.authorized) {
+                    viewModel.likeById(post.id)
+                } else {
+                    authenticate()
+                }
             }
 
-            override fun onPostClick(post: Post) {
+            override fun PhotoClick(post: Post) { //onPostClick
                 findNavController().navigate(
-                    R.id.action_feedFragment_to_onePostFragment,
+                    R.id.action_feedFragment_to_photo,
                     Bundle().apply {
-                        textArg = post.id.toString()
+                        textArg = post.attachment?.url
                     })
                 viewModel.edit(post)
             }
 
             override fun onRemove(post: Post) {
-                viewModel.removeById(post.id)
+                if (viewModelAuth.authorized) {
+                    viewModel.removeById(post.id)
+                } else {
+                    authenticate()
+                }
             }
 
             override fun onEdit(post: Post) {
-                findNavController().navigate(
-                    R.id.action_feedFragment_to_newPostFragment,
-                    Bundle().apply {
-                        textArg = post.content
-                    })
-                viewModel.edit(post)
+                if (viewModelAuth.authorized) {
+                    viewModel.edit(post)
+
+                    findNavController().navigate(
+                        R.id.action_feedFragment_to_newPostFragment,
+                        Bundle().apply {
+                            textArg = post.attachment?.url
+                        })
+                } else {
+                    authenticate()
+                }
+
 
             }
 
@@ -111,7 +132,7 @@ class FeedFragment : Fragment() {
 
         binding.newerCount.setOnClickListener {
             viewModel.readAll()
-            binding.newerCount.isVisible =false
+            binding.newerCount.isVisible = false
         }
 
         binding.swipeRefreshLayout.setOnRefreshListener {
@@ -154,9 +175,16 @@ class FeedFragment : Fragment() {
 
 
         binding.fab.setOnClickListener {
-            findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
+            if (viewModelAuth.authorized) {
+                findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
+            }else{
+                authenticate()
+            }
         }
         return binding.root
 
     }
+
+    private fun authenticate() =
+        findNavController().navigate(R.id.action_feedFragment_to_singInFragment)
 }
