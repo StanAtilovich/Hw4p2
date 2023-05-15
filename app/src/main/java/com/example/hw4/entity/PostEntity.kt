@@ -3,7 +3,6 @@ package com.example.hw4.entity
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
 import com.example.hw4.DTO.Post
 
 

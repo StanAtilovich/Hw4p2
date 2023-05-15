@@ -1,6 +1,5 @@
 package com.example.hw4.activity
 
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View

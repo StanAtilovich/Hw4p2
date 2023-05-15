@@ -1,18 +1,19 @@
-import android.app.Application
 import android.net.Uri
-import androidx.lifecycle.*
-
-
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.switchMap
+import androidx.lifecycle.viewModelScope
 import com.example.hw4.DTO.MediaUpload
 import com.example.hw4.DTO.Post
-import auth.AppAuth
-import com.example.hw4.db.AppDb
+import com.example.hw4.auth.AppAuth
 import com.example.hw4.model.FeedModel
 import com.example.hw4.model.FeedModelState
 import com.example.hw4.model.PhotoModel
 import com.example.hw4.repository.PostRepository
-import com.example.hw4.repository.PostRepositoryImpl
 import com.example.hw4.util.SingleLiveEvent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.catch
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.io.File
+import javax.inject.Inject
 
 
 private val empty = Post(
@@ -40,25 +42,27 @@ private val empty = Post(
     hidden = false,
     ownedByMe = false,
 
-)
+    )
 private val noPhoto = PhotoModel()
-
-class PostViewModel(application: Application) : AndroidViewModel(application) {
-
-
-    private val repository: PostRepository =
-        PostRepositoryImpl(AppDb.getInstance(application).postDao())
+@OptIn(ExperimentalCoroutinesApi::class)
+@HiltViewModel
+class PostViewModel @Inject constructor(
+    private val repository: PostRepository,
+    appAuth: AppAuth,
+) : ViewModel() {
     private val _dataState = MutableLiveData(FeedModelState())
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val data: LiveData<FeedModel> = AppAuth.getInstance().data.flatMapLatest { authState ->
-        repository.data
-            .map {posts ->
-                FeedModel(posts.map {
-                    it.copy(ownedByMe = authState?.id == it.authorId)
-                }, posts.isEmpty())
-            }
-    }
+
+    val data: LiveData<FeedModel> = appAuth
+        .data
+        .flatMapLatest { authState ->
+            repository.data
+                .map { posts ->
+                    FeedModel(posts.map {
+                        it.copy(ownedByMe = authState?.id == it.authorId)
+                    }, posts.isEmpty())
+                }
+        }
         .asLiveData(Dispatchers.Default)
 
     val newerCount: LiveData<Int> = data.switchMap {

@@ -16,23 +16,27 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.hw4.DTO.Post
 import com.example.hw4.R
-import com.example.hw4.activity.PhotoView.Companion.textArg
+import com.example.hw4.activity.NewPostFragment.Companion.textArg
 import com.example.hw4.adapter.OnInteractionListener
 import com.example.hw4.adapter.PostAdapter
 import com.example.hw4.databinding.FragmentFeedBinding
 import com.example.hw4.util.AndroidUtils
 import com.example.hw4.viewModel.AuthViewModel
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.coroutines.EmptyCoroutineContext
 
 
+@AndroidEntryPoint
 class FeedFragment : Fragment() {
     private val viewModel: PostViewModel by activityViewModels()
 
-    private val viewModelAuth: AuthViewModel by viewModels(ownerProducer = ::requireParentFragment)
+    private val viewModelAuth: AuthViewModel by viewModels(
+        ownerProducer = ::requireParentFragment
+    )
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

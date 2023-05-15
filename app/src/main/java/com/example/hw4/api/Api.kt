@@ -1,55 +1,25 @@
 package com.example.hw4.api
 
 
-import auth.AppAuth
-import com.example.hw4.BuildConfig
 import com.example.hw4.DTO.Media
 import com.example.hw4.DTO.Post
 import com.example.hw4.DTO.PushToken
 import com.example.hw4.DTO.User
 import okhttp3.MultipartBody
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
+import retrofit2.http.Multipart
+import retrofit2.http.POST
+import retrofit2.http.Part
+import retrofit2.http.Path
 
 
-private const val BASE_URL = "${BuildConfig.BASE_URL}/api/slow/"
 
 
-private val logging = HttpLoggingInterceptor().apply {
-    if (BuildConfig.DEBUG) {
-        level = HttpLoggingInterceptor.Level.HEADERS
-    }
-}
-
-
-private val client = OkHttpClient.Builder()
-    .addInterceptor(logging)
-    .addInterceptor { chain ->
-        val request = AppAuth.getInstance().data.value?.token?.let {
-            chain.request().newBuilder()
-                .addHeader("Authorization", it)
-                .build()
-        } ?: chain.request()
-        chain.proceed(request)
-    }
-    .build()
-
-
-private val retrofit = Retrofit.Builder()
-    .addConverterFactory(GsonConverterFactory.create())
-    .client(client)
-    .baseUrl(BASE_URL)
-    .build()
-
-object Api {
-    val service: ApiService by lazy {
-        retrofit.create(ApiService::class.java)
-    }
-}
 interface ApiService {
     @GET("posts")
     suspend fun getAll(): Response<List<Post>>

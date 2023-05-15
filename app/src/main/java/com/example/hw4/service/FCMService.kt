@@ -9,19 +9,29 @@ import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import auth.AppAuth
 import com.example.hw4.R
-import com.example.hw4.error.DbError.info
+import com.example.hw4.api.ApiService
+import com.example.hw4.auth.AppAuth
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlin.random.Random
 
+
+@AndroidEntryPoint
 class FCMService : FirebaseMessagingService() {
     private val action = "action"
     private val content = "content"
     private val channelId = "remote"
     private val gson = Gson()
+
+
+    @Inject
+    lateinit var appAuth: AppAuth
+    @Inject
+    lateinit var apiService: ApiService
 
     override fun onCreate() {
         super.onCreate()
@@ -41,41 +51,20 @@ class FCMService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         try {
             val recipientId = gson.fromJson(message.data[content], Info::class.java).recipientId
-            val userId = AppAuth.getInstance().data.value?.id
+            val userId = appAuth.data.value?.id
 
-            if (recipientId == null || recipientId == userId){
-                handleInfo(gson.fromJson(message.data[content],Info::class.java))
-            }else if (recipientId == 0L && recipientId != userId){
-                AppAuth.getInstance().sendPushToken()
-            }else if (recipientId != 0L && recipientId != userId){
-                AppAuth.getInstance().sendPushToken()
+            if (recipientId == null || recipientId == userId) {
+                handleInfo(gson.fromJson(message.data[content], Info::class.java))
+            } else if (recipientId == 0L && recipientId != userId) {
+                appAuth.sendPushToken()
+            } else if (recipientId != 0L && recipientId != userId) {
+                appAuth.sendPushToken()
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             println(gson.toJson(message.data[content]))
         }
-        // println(message.data["content"])
-        //    println(Gson().toJson(message))
-        //    try {
-        //        message.data[action]?.let {
-        //            when (Action.valueOf(it)) {
-        //                Action.LIKE -> handleLike(
-        //                    Gson().fromJson(
-        //                        message.data["content"],
-        //                        Like::class.java
-        //                    )
-        //                )
-        //                Action.POST -> handlePost(
-        //                    gson.fromJson(message.data[content], FCMPost::class.java)
-        //                )
-        //            }
-        //        }
-//
-        //    }
-        //    catch (e: RuntimeException) {
-        //        println(R.string.not_nown_action_notification)
-        //        return
-        //    }
+
     }
 
 
@@ -83,7 +72,7 @@ class FCMService : FirebaseMessagingService() {
         val notification = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(
-                getString(R.string.notification_user_posted,content.postContent)
+                getString(R.string.notification_user_posted, content.postContent)
             )
             .setContentText(content.postContent)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -99,75 +88,33 @@ class FCMService : FirebaseMessagingService() {
                 Manifest.permission.POST_NOTIFICATIONS
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return
         }
         NotificationManagerCompat.from(this)
             .notify(Random.nextInt(100_000), notification)
     }
 
-//   private fun handleLike(like: Like) {
-//       val notification = NotificationCompat.Builder(this, channelId)
-//           .setSmallIcon(R.drawable.ic_notification)
-//           .setContentTitle(
-//               getString(
-//                   R.string.notification_user_liked,
-//                   like.userName,
-//                   like.postAuthor
-//               )
-//           )
-//           .build()
+    private fun handleInfo(info: Info) {
+        val notification = NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setContentTitle(info.recipientId.toString())
+            .setContentText(info.content)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .build()
 
-//       if (ActivityCompat.checkSelfPermission(
-//               this,
-//               Manifest.permission.POST_NOTIFICATIONS
-//           ) != PackageManager.PERMISSION_GRANTED
-//       ) {
-//           // TODO: Consider calling
-//           //    ActivityCompat#requestPermissions
-//           // here to request the missing permissions, and then overriding
-//           //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//           //                                          int[] grantResults)
-//           // to handle the case where the user grants the permission. See the documentation
-//           // for ActivityCompat#requestPermissions for more details.
-//           return
-//       }
-//       NotificationManagerCompat.from(this).notify(Random.nextInt(100_000), notification)
-//   }
-private fun handleInfo(info: Info) {
-    val notification = NotificationCompat.Builder(this, channelId)
-        .setSmallIcon(R.drawable.ic_notification)
-        .setContentTitle(info.recipientId.toString())
-        .setContentText(info.content)
-        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-        .build()
-
-    if (ActivityCompat.checkSelfPermission(
-            this,
-            Manifest.permission.POST_NOTIFICATIONS
-        ) != PackageManager.PERMISSION_GRANTED
-    ) {
-        // TODO: Consider calling
-        //    ActivityCompat#requestPermissions
-        // here to request the missing permissions, and then overriding
-        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-        //                                          int[] grantResults)
-        // to handle the case where the user grants the permission. See the documentation
-        // for ActivityCompat#requestPermissions for more details.
-        return
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        NotificationManagerCompat.from(this)
+            .notify(Random.nextInt(100_000), notification)
     }
-    NotificationManagerCompat.from(this)
-        .notify(Random.nextInt(100_000), notification)
-}
 
     override fun onNewToken(token: String) {
-        AppAuth.getInstance().sendPushToken(token)
+        appAuth.sendPushToken(token)
     }
 }
 
@@ -179,7 +126,7 @@ data class FCMPost(
 
 enum class Action {
     LIKE,
-    POST,INFO
+    POST, INFO
 }
 
 data class Like(
@@ -188,6 +135,7 @@ data class Like(
     val postId: Int,
     val postAuthor: String,
 )
+
 data class NewPost(
     val postAuthor: String,
     val postContent: String

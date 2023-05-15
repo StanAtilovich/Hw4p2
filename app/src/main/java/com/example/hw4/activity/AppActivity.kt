@@ -1,6 +1,5 @@
 package com.example.hw4.activity
 
-
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -11,20 +10,20 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.navigation.findNavController
-import auth.AppAuth
-
 import com.example.hw4.R
 import com.example.hw4.activity.NewPostFragment.Companion.textArg
-
+import com.example.hw4.auth.AppAuth
 import com.example.hw4.viewModel.AuthViewModel
-
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.messaging.FirebaseMessaging
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class AppActivity : AppCompatActivity(R.layout.activity_app) {
-
+    @Inject
+    lateinit var appAuth: AppAuth
 
     val authViewModel by viewModels<AuthViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,9 +75,10 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
                         }
 
                         R.id.singOut -> {
-                            AppAuth.getInstance().removeAuth()
+                            appAuth.removeAuth()
                             true
                         }
+
                         else -> false//{onMenuItemSelected(menuItem)}
                     }
 
@@ -93,7 +93,6 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
 
         checkGoogleApiAvailability()
     }
-
 
 
     private fun checkGoogleApiAvailability() {

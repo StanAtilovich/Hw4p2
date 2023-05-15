@@ -4,7 +4,7 @@ package com.example.hw4.repository
 import com.example.hw4.DTO.Media
 import com.example.hw4.DTO.MediaUpload
 import com.example.hw4.DTO.Post
-import com.example.hw4.api.Api
+import com.example.hw4.api.ApiService
 import com.example.hw4.dao.PostDao
 import com.example.hw4.entity.*
 import com.example.hw4.error.ApiException
@@ -17,9 +17,13 @@ import kotlinx.coroutines.flow.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.IOException
+import javax.inject.Inject
 
 
-class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
+class PostRepositoryImpl @Inject constructor(
+    private val dao: PostDao,
+private val apiService: ApiService,
+    ) : PostRepository {
     override val data = dao.getAll()
         .map { it.toDto() }
         .flowOn(Dispatchers.Default)
@@ -28,7 +32,7 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
     override suspend fun likedById(id: Long) {
         try {
             dao.likeById(id)
-            val response = Api.service.likedById(id)
+            val response = apiService.likedById(id)
             if (!response.isSuccessful) {
                 throw ApiException(response.code(), response.message())
             }
@@ -42,7 +46,7 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
     override suspend fun unliked(id: Long) {
         try {
             dao.likeById(id)
-            val response = Api.service.unlikedByIdAsync(id)
+            val response = apiService.unlikedByIdAsync(id)
             if (!response.isSuccessful) {
                 throw ApiException(response.code(), response.message())
             }
@@ -56,7 +60,7 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
     override fun getNewerCount(id: Long): Flow<Int> = flow {
         while (true) {
             delay(10000L)
-            val response = Api.service.getNewer(id)
+            val response = apiService.getNewer(id)
             if (!response.isSuccessful) {
                 throw ApiException(response.code(), response.message())
             }
@@ -97,7 +101,7 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
             val data = MultipartBody.Part.createFormData(
                 "file", upload.file.name, upload.file.asRequestBody()
             )
-            val response = Api.service.upload(data)
+            val response = apiService.upload(data)
             if (!response.isSuccessful) {
                 throw ApiException(response.code(), response.message())
             }
@@ -114,7 +118,7 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
 
     override suspend fun save(post: Post) {
         try {
-            val response = Api.service.save(post)
+            val response = apiService.save(post)
             if (!response.isSuccessful) {
                 throw ApiException(response.code(), response.message())
             }
@@ -132,7 +136,7 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
     override suspend fun removeById(id: Long) {
         try {
             dao.removeById(id)
-            val response = Api.service.removeById(id)
+            val response = apiService.removeById(id)
             if (!response.isSuccessful) {
                 throw ApiException(response.code(), response.message())
             }
@@ -147,7 +151,7 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
 
     override suspend fun getAll() {
         try {
-            val response = Api.service.getAll()
+            val response = apiService.getAll()
             if (!response.isSuccessful) {
                 throw ApiException(response.code(), response.message())
             }

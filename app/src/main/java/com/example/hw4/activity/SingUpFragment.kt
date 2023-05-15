@@ -7,13 +7,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import auth.AppAuth
-
 import com.example.hw4.R
 import com.example.hw4.databinding.SignUpBinding
 import com.example.hw4.viewModel.SingUpViewModel
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_INDEFINITE
 import com.google.android.material.snackbar.Snackbar
+
+
 
 class SingUpFragment : Fragment() {
 
@@ -27,7 +27,6 @@ class SingUpFragment : Fragment() {
         val binding = SignUpBinding.inflate(inflater, container, false)
 
         viewModel.data.observe(viewLifecycleOwner) {
-            AppAuth.getInstance().setAuth(it.id, it.token)
             findNavController().navigateUp()
         }
 

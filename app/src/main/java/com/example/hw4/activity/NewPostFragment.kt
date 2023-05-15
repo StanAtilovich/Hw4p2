@@ -3,12 +3,15 @@ package com.example.hw4.activity
 import PostViewModel
 import android.app.Activity
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toFile
-
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -18,18 +21,17 @@ import com.example.hw4.R
 import com.example.hw4.databinding.FragmentNewPostBinding
 import com.example.hw4.util.AndroidUtils
 import com.example.hw4.util.StringArg
-
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.contract
 
 
+@AndroidEntryPoint
 class NewPostFragment : Fragment() {
     companion object {
         var Bundle.textArg: String? by StringArg
     }
-
 
     private val viewModel: PostViewModel by viewModels(
         ownerProducer = ::requireParentFragment
@@ -103,7 +105,7 @@ class NewPostFragment : Fragment() {
 
 
 
-        activity?.addMenuProvider(object :MenuProvider{
+        activity?.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.menu_new_post,menu)
             }
